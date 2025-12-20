@@ -10,18 +10,15 @@
         :root { --primary: #D81B60; --dark: #1e293b; --light: #f1f5f9; --white: #ffffff; --green: #10b981; --red: #ef4444; }
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); display: flex; height: 100vh; color: #334155; }
         
-        /* SIDEBAR */
         .sidebar { width: 260px; background: var(--dark); color: white; display: flex; flex-direction: column; padding: 20px; }
         .brand { font-size: 1.5rem; font-weight: 600; color: var(--primary); margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
         .nav-item { padding: 12px; color: #94a3b8; display: flex; gap: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; text-decoration: none; margin-bottom: 5px; }
         .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
         
-        /* MAIN */
         .main { flex: 1; overflow-y: auto; padding: 30px; }
         .card { background: white; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
         .card-header { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
         
-        /* FORM INPUTS */
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 10px; font-family: inherit; box-sizing: border-box; }
         .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
         .btn-primary { background: var(--primary); color: white; }
@@ -29,118 +26,145 @@
         .btn-outline { border: 1px solid #cbd5e1; background: white; color: #475569; }
         .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
 
-        /* STOCK DISPLAY IN TABLE */
         .stock-tag { display: inline-block; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; margin: 2px; border: 1px solid #e2e8f0; background: #f8fafc; }
         .stock-tag.low { color: var(--red); border-color: #fca5a5; background: #fef2f2; }
         .stock-tag.ok { color: var(--green); border-color: #86efac; background: #f0fdf4; }
 
-        /* STOCK GRID INPUTS */
         .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 10px; }
         .stk-box { background: #f8fafc; padding: 5px; border: 1px solid #cbd5e1; border-radius: 5px; text-align: center; }
         .stk-box label { font-size: 0.75rem; display: block; font-weight: 600; margin-bottom: 3px; }
         .stk-box input { margin: 0; text-align: center; font-weight: 700; }
 
-        /* TABLE */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th { text-align: left; padding: 12px; background: #f1f5f9; color: #64748b; font-size: 0.85rem; font-weight: 600; }
         td { padding: 12px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         .thumb { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; border: 1px solid #e2e8f0; }
 
-        /* LOADER */
+        /* LAYOUT PAGE SPECIFIC */
+        .layout-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; background: white; }
+        .layout-item:hover { background: #f8fafc; }
+        .rank-input { width: 60px; text-align: center; font-weight: bold; margin: 0; border: 2px solid #e2e8f0; }
+        .rank-input:focus { border-color: var(--primary); }
+
         #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 999; display: none; align-items: center; justify-content: center; flex-direction: column; }
         .spinner { width: 40px; height: 40px; border: 4px solid #ddd; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         
-        /* EDIT MODE STYLE */
+        .section { display: none; }
+        .section.active { display: block; }
         .editing-mode { border: 2px solid var(--edit); background-color: #fffbeb; }
     </style>
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div><div style="margin-top:10px; font-weight:600; color:var(--primary);">Fetching from Cloud...</div></div>
+<div id="loader"><div class="spinner"></div><div style="margin-top:10px; font-weight:600; color:var(--primary);">Syncing...</div></div>
 
 <div class="sidebar">
     <div class="brand"><i class="ri-store-3-line"></i> Jija Admin</div>
-    <a href="#productForm" class="nav-item active"><i class="ri-add-circle-line"></i> Add / Edit Product</a>
-    <a href="#inventoryCard" class="nav-item"><i class="ri-list-check"></i> Inventory List</a>
-    <a href="#categoryCard" class="nav-item"><i class="ri-layout-grid-line"></i> Banners & Cats</a>
+    <div class="nav-item active" onclick="showSection('prodSection', this)"><i class="ri-add-circle-line"></i> Products</div>
+    <div class="nav-item" onclick="showSection('layoutSection', this)"><i class="ri-layout-masonry-line"></i> Store Layout</div>
+    <div class="nav-item" onclick="showSection('invSection', this)"><i class="ri-list-check"></i> Inventory</div>
+    <div class="nav-item" onclick="showSection('catSection', this)"><i class="ri-price-tag-3-line"></i> Banners & Cats</div>
 </div>
 
 <div class="main">
     
-    <div class="card" id="productForm">
-        <div class="card-header">
-            <span id="formTitle">Add New Product</span> 
-            <button class="btn btn-danger" id="cancelEdit" style="display:none;" onclick="resetForm()">Cancel Edit</button>
-        </div>
-        
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div>
-                <input id="pName" placeholder="Product Name">
-                <select id="pCat" onchange="renderSubSelect()">
-                    <option value="cloth">Adult Fashion</option>
-                    <option value="kids">Kids Wear</option>
-                    <option value="footwear">Footwear</option>
-                    <option value="jewelry">Jewelry</option>
-                    <option value="toy">Toy</option>
-                </select>
-                <div class="multi-select-box" id="subCatBox"></div>
+    <div id="prodSection" class="section active">
+        <div class="card" id="productForm">
+            <div class="card-header">
+                <span id="formTitle">Add New Product</span> 
+                <button class="btn btn-danger" id="cancelEdit" style="display:none;" onclick="resetForm()">Cancel Edit</button>
             </div>
-            <div>
-                <input id="pPrice" type="number" placeholder="Selling Price">
-                <input id="pMrp" type="number" placeholder="MRP">
-                <input id="pBadge" placeholder="Badge URL (e.g. Sale icon)">
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <input id="pName" placeholder="Product Name">
+                    <select id="pCat" onchange="renderSubSelect()">
+                        <option value="cloth">Adult Fashion</option>
+                        <option value="kids">Kids Wear</option>
+                        <option value="footwear">Footwear</option>
+                        <option value="jewelry">Jewelry</option>
+                        <option value="toy">Toy</option>
+                    </select>
+                    <div class="multi-select-box" id="subCatBox"></div>
+                </div>
+                <div>
+                    <input id="pPrice" type="number" placeholder="Selling Price">
+                    <input id="pMrp" type="number" placeholder="MRP">
+                    <input id="pBadge" placeholder="Badge URL (e.g. Sale icon)">
+                    <div style="display:flex; align-items:center; gap:10px; background:#f0fdf4; padding:5px; border-radius:5px;">
+                        <label style="margin:0; font-size:0.8rem; font-weight:600; color:#15803d;">Page Rank (1=Top):</label>
+                        <input id="pRank" type="number" value="100" style="margin:0; width:70px;">
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <input id="pImg" placeholder="Main Image URL">
-        <div style="display:flex; gap:10px;">
-            <input id="pImg2" placeholder="Image 2 URL">
-            <input id="pImg3" placeholder="Image 3 URL">
-        </div>
-        <input id="pVideo" placeholder="YouTube Video URL">
-        <textarea id="pDesc" rows="2" placeholder="Description..."></textarea>
-        
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
-            <input type="checkbox" id="pBanner" style="width:auto; margin:0;">
-            <label for="pBanner" style="margin:0;">Promote in Home Slider?</label>
-        </div>
+            
+            <input id="pImg" placeholder="Main Image URL">
+            <div style="display:flex; gap:10px;">
+                <input id="pImg2" placeholder="Image 2 URL">
+                <input id="pImg3" placeholder="Image 3 URL">
+            </div>
+            <input id="pVideo" placeholder="YouTube Video URL">
+            <textarea id="pDesc" rows="2" placeholder="Description..."></textarea>
+            
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <input type="checkbox" id="pBanner" style="width:auto; margin:0;">
+                <label for="pBanner" style="margin:0;">Promote in Home Slider?</label>
+            </div>
 
-        <div style="background:#f0fdf4; padding:15px; border-radius:8px; border:1px dashed var(--green);">
-            <label style="font-weight:600; color:#15803d;"><i class="ri-stack-line"></i> Manage Inventory Stock</label>
-            <div id="stockGrid" class="stock-grid"></div>
-        </div>
+            <div style="background:#f0fdf4; padding:15px; border-radius:8px; border:1px dashed var(--green);">
+                <label style="font-weight:600; color:#15803d;"><i class="ri-stack-line"></i> Manage Inventory Stock</label>
+                <div id="stockGrid" class="stock-grid"></div>
+            </div>
 
-        <button class="btn btn-primary" onclick="saveProduct()" style="margin-top:20px; width:100%;" id="saveBtn">Save Product</button>
-    </div>
-
-    <div class="card" id="inventoryCard">
-        <div class="card-header">Current Inventory</div>
-        <div style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th width="60">Img</th>
-                        <th>Product Details</th>
-                        <th>Price</th>
-                        <th>Stock Breakdown</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
+            <button class="btn btn-primary" onclick="saveProduct()" style="margin-top:20px; width:100%;" id="saveBtn">Save Product</button>
         </div>
     </div>
 
-    <div class="card" id="categoryCard">
-        <div class="card-header">Category Ads</div>
-        <div style="display: flex; gap: 10px;">
-            <select id="banCat" style="width: 150px;"><option value="">Category</option></select>
-            <select id="banType" style="width: 100px;"><option value="img">Image</option><option value="vid">Video</option></select>
-            <input id="banMedia" placeholder="Media URL" style="flex:1;">
-            <button class="btn btn-primary" onclick="addCategoryBanner()">Add Ad</button>
+    <div id="layoutSection" class="section">
+        <div class="card">
+            <div class="card-header">
+                <span>Manage Homepage Order</span>
+                <button class="btn btn-primary" onclick="saveData()">Save All Changes</button>
+            </div>
+            <p style="font-size:0.9rem; color:#64748b; margin-bottom:20px;">
+                Enter a number to rank products. <strong>1</strong> appears at the top. <strong>100</strong> is default.
+            </p>
+            <div id="layoutList"></div>
         </div>
-        <div id="bannerGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap:10px; margin-top:10px;"></div>
+    </div>
+
+    <div id="invSection" class="section">
+        <div class="card">
+            <div class="card-header">Current Inventory</div>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="60">Img</th>
+                            <th>Product</th>
+                            <th>Rank</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="catSection" class="section">
+        <div class="card">
+            <div class="card-header">Category Ads</div>
+            <div style="display: flex; gap: 10px;">
+                <select id="banCat" style="width: 150px;"><option value="">Category</option></select>
+                <select id="banType" style="width: 100px;"><option value="img">Image</option><option value="vid">Video</option></select>
+                <input id="banMedia" placeholder="Media URL" style="flex:1;">
+                <button class="btn btn-primary" onclick="addCategoryBanner()">Add Ad</button>
+            </div>
+            <div id="bannerGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap:10px; margin-top:10px;"></div>
+        </div>
     </div>
 
 </div>
@@ -159,6 +183,14 @@
 
     window.onload = loadData;
 
+    function showSection(id, btn) {
+        document.querySelectorAll('.section').forEach(d => d.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+        if(id === 'layoutSection') renderLayoutEditor();
+    }
+
     async function loadData() {
         document.getElementById('loader').style.display = 'flex';
         try {
@@ -166,24 +198,18 @@
             const d = await r.json();
             
             if(d) {
-                // Cloud data found - Use it
                 appData = d;
                 if(!appData.products) appData.products = [];
                 if(!appData.catBanners) appData.catBanners = [];
             } else {
-                // Cloud is empty? Try local storage backup
                 const local = localStorage.getItem('jijaData');
                 if(local) {
                     appData = JSON.parse(local);
-                    console.log("Recovered from Local Storage. Syncing to Cloud...");
-                    saveData(); // Push local data to cloud immediately
+                    saveData();
                 }
             }
             refreshUI();
-        } catch(e) { 
-            console.error(e);
-            alert("Error loading data. Check internet connection."); 
-        }
+        } catch(e) { alert("Error loading data. Check internet."); }
         document.getElementById('loader').style.display = 'none';
     }
 
@@ -191,13 +217,10 @@
         document.getElementById('loader').style.display = 'flex';
         try {
             await fetch(DB_URL, { method: "PUT", body: JSON.stringify(appData) });
-            // Backup locally as well
             localStorage.setItem('jijaData', JSON.stringify(appData));
-        } catch(e) {
-            alert("Save failed! Check internet.");
-        }
+        } catch(e) { alert("Save failed!"); }
         document.getElementById('loader').style.display = 'none';
-        refreshUI(); // Ensure table reflects new data immediately
+        refreshUI();
     }
 
     function refreshUI() {
@@ -206,16 +229,41 @@
         renderBanners();
     }
 
+    // --- LAYOUT EDITOR (NEW) ---
+    function renderLayoutEditor() {
+        const list = document.getElementById('layoutList');
+        // Sort by rank then id
+        const sorted = [...appData.products].sort((a,b) => (a.rank||100) - (b.rank||100));
+        
+        list.innerHTML = sorted.map(p => `
+            <div class="layout-item">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="${p.img}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
+                    <div>
+                        <div style="font-weight:600;">${p.name}</div>
+                        <div style="font-size:0.8rem; color:#64748b;">Current Rank: ${p.rank || 100}</div>
+                    </div>
+                </div>
+                <div>
+                    <input type="number" class="rank-input" value="${p.rank || 100}" onchange="updateRank(${p.id}, this.value)">
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function updateRank(id, val) {
+        const p = appData.products.find(x => x.id === id);
+        if(p) p.rank = parseInt(val);
+    }
+
     // --- PRODUCT LOGIC ---
     function renderSubSelect() {
         const cat = document.getElementById('pCat').value;
         const subs = appData.subCategories[cat] || [];
         
-        // Multi-select Logic
         let html = subs.map(s => `<div style="margin:2px 0;"><input type="checkbox" value="${s}" name="subcat"> ${s}</div>`).join('');
         document.getElementById('subCatBox').innerHTML = html || "<small>No sub-categories</small>";
 
-        // Banner Dropdown
         let allSubs = [];
         for(let k in appData.subCategories) allSubs = [...allSubs, ...appData.subCategories[k]];
         document.getElementById('banCat').innerHTML = '<option value="">Target Cat</option>' + allSubs.map(s => `<option value="${s}">${s}</option>`).join('');
@@ -247,6 +295,7 @@
             price: document.getElementById('pPrice').value,
             mrp: document.getElementById('pMrp').value,
             badge: document.getElementById('pBadge').value,
+            rank: parseInt(document.getElementById('pRank').value) || 100, // SAVE RANK
             img: document.getElementById('pImg').value,
             img2: document.getElementById('pImg2').value,
             img3: document.getElementById('pImg3').value,
@@ -259,10 +308,10 @@
         if(editId) {
             const idx = appData.products.findIndex(p => p.id === editId);
             appData.products[idx] = prod;
-            alert("Product Updated!");
+            alert("Updated!");
         } else {
             appData.products.push(prod);
-            alert("Product Added!");
+            alert("Added!");
         }
         
         saveData();
@@ -274,8 +323,7 @@
         if(!p) return;
         
         editId = id;
-        document.getElementById('productForm').scrollIntoView({behavior:'smooth'});
-        document.getElementById('productForm').classList.add('editing-mode'); // Visual cue
+        showSection('prodSection', document.querySelector('.nav-item')); // Switch tab
         
         document.getElementById('formTitle').innerText = "Edit Product: " + p.name;
         document.getElementById('saveBtn').innerText = "Update Product";
@@ -286,6 +334,7 @@
         document.getElementById('pPrice').value = p.price;
         document.getElementById('pMrp').value = p.mrp || "";
         document.getElementById('pBadge').value = p.badge || "";
+        document.getElementById('pRank').value = p.rank || 100;
         document.getElementById('pImg').value = p.img;
         document.getElementById('pImg2').value = p.img2 || "";
         document.getElementById('pImg3').value = p.img3 || "";
@@ -293,16 +342,14 @@
         document.getElementById('pDesc').value = p.desc || "";
         document.getElementById('pBanner').checked = p.isBanner;
 
-        renderSubSelect(); // Refresh checkboxes
+        renderSubSelect(); 
         
-        // Fill checkboxes
         if(p.subCats) {
             document.querySelectorAll('input[name="subcat"]').forEach(cb => {
                 if(p.subCats.includes(cb.value)) cb.checked = true;
             });
         }
 
-        // Fill stock
         setTimeout(() => {
             document.querySelectorAll('.stk-in').forEach(i => {
                 if(p.stock[i.dataset.s] !== undefined) i.value = p.stock[i.dataset.s];
@@ -313,11 +360,11 @@
     function resetForm() {
         editId = null;
         document.querySelectorAll('input, textarea').forEach(i => i.value='');
+        document.getElementById('pRank').value = 100;
         document.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked=false);
         document.getElementById('formTitle').innerText = "Add New Product";
         document.getElementById('saveBtn').innerText = "Save Product";
         document.getElementById('cancelEdit').style.display = "none";
-        document.getElementById('productForm').classList.remove('editing-mode');
         renderSubSelect();
     }
 
@@ -328,7 +375,6 @@
         }
     }
 
-    // --- TABLE RENDER (THE IMPORTANT PART) ---
     function renderTable() {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = "";
@@ -338,7 +384,6 @@
             return;
         }
 
-        // Show newest first
         appData.products.slice().reverse().forEach(p => {
             let stockHtml = "";
             for(let [k,v] of Object.entries(p.stock)) {
@@ -356,11 +401,11 @@
                 </td>
                 <td>
                     <div style="font-weight:600;">₹${p.price}</div>
-                    <div style="font-size:0.8rem; text-decoration:line-through; color:#94a3b8;">${p.mrp ? '₹'+p.mrp : ''}</div>
+                    <div style="font-size:0.7rem; background:#f1f5f9; display:inline-block; padding:2px 5px; border-radius:4px;">Rank: ${p.rank || 100}</div>
                 </td>
                 <td>${stockHtml}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline" onclick="startEdit(${p.id})"><i class="ri-pencil-line"></i> Edit</button>
+                    <button class="btn btn-sm btn-outline" onclick="startEdit(${p.id})"><i class="ri-pencil-line"></i></button>
                     <button class="btn btn-sm btn-danger" onclick="deleteProd(${p.id})"><i class="ri-delete-bin-line"></i></button>
                 </td>
             </tr>`;
