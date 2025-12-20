@@ -3,125 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jija Admin | Professional Dashboard</title>
+    <title>Admin Dashboard | Jija Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        :root { --primary: #D81B60; --dark: #2c3e50; --edit: #f39c12; --green: #27ae60; --light: #f4f7f6; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--light); display: flex; color: #333; }
+        :root { --primary: #D81B60; --dark: #1e293b; --light: #f1f5f9; --white: #ffffff; --green: #10b981; --red: #ef4444; --gray: #64748b; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); display: flex; color: #334155; height: 100vh; overflow: hidden; }
         
-        /* LAYOUT */
-        .sidebar { width: 260px; background: var(--dark); color: white; min-height: 100vh; padding: 25px; position: fixed; box-sizing: border-box; }
-        .main-content { margin-left: 260px; padding: 40px; width: 100%; box-sizing: border-box; }
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--dark); color: var(--white); display: flex; flex-direction: column; padding: 20px; transition: 0.3s; }
+        .brand { font-size: 1.5rem; font-weight: 600; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; color: var(--primary); }
+        .nav-item { padding: 12px 15px; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 10px; border-radius: 8px; transition: 0.2s; margin-bottom: 5px; font-size: 0.95rem; cursor: pointer; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: var(--white); }
+        .nav-item i { font-size: 1.2rem; }
+        .logout-btn { margin-top: auto; background: rgba(239,68,68,0.1); color: var(--red); }
+        .logout-btn:hover { background: var(--red); color: white; }
+
+        /* MAIN CONTENT */
+        .main { flex: 1; overflow-y: auto; padding: 30px; position: relative; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { font-size: 1.8rem; font-weight: 600; margin: 0; }
         
-        /* UI ELEMENTS */
-        h1, h2, h3 { margin-top: 0; }
-        .card { background: white; padding: 25px; margin-bottom: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
+        /* CARDS */
+        .card { background: var(--white); border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #e2e8f0; }
+        .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--dark); }
         
+        /* FORMS */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .full-width { grid-column: span 2; }
+        label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; color: var(--gray); }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem; outline: none; transition: 0.2s; box-sizing: border-box; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.1); }
         
-        label { font-weight: 600; font-size: 0.9rem; color: #555; display: block; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem; transition: border 0.3s; }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; }
+        /* BUTTONS */
+        .btn { padding: 12px 20px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; font-size: 0.95rem; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #ad1457; }
+        .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: var(--gray); }
+        .btn-outline:hover { border-color: var(--dark); color: var(--dark); }
+        .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
         
-        button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.95rem; transition: opacity 0.2s; }
-        button:hover { opacity: 0.9; }
+        /* TABLE */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; border-bottom: 2px solid #e2e8f0; color: var(--gray); font-size: 0.85rem; text-transform: uppercase; font-weight: 600; }
+        td { padding: 15px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        .img-thumb { width: 48px; height: 48px; border-radius: 6px; object-fit: cover; background: #f1f5f9; border: 1px solid #e2e8f0; }
         
         /* STOCK GRID */
-        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; margin-top: 10px; }
-        .stock-item { background: #fafafa; padding: 8px; border: 1px solid #eee; text-align: center; border-radius: 6px; }
-        .stock-item label { font-size: 0.75rem; margin-bottom: 2px; }
-        .stock-item input { padding: 5px; text-align: center; font-weight: bold; }
+        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 10px; }
+        .stock-input-group { background: #f8fafc; padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0; text-align: center; }
+        .stock-input-group label { font-size: 0.75rem; margin-bottom: 4px; }
+        .stock-input-group input { text-align: center; padding: 6px; font-weight: 600; border: 1px solid #cbd5e1; }
 
-        /* TABLE */
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; background: #f8f9fa; padding: 12px; border-bottom: 2px solid #eee; font-size: 0.9rem; color: #666; }
-        td { padding: 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
-        .img-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; }
-        
-        /* BADGES */
-        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-right: 3px; margin-bottom: 3px; }
-        .badge-stock { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
-        .badge-zero { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
-        .badge-banner { background: var(--green); color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.7rem; text-transform: uppercase; }
+        /* TOAST */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease; border-left: 4px solid var(--green); min-width: 300px; }
+        .toast.error { border-left-color: var(--red); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        /* BUTTONS */
-        .btn-edit { background: var(--edit); padding: 6px 12px; font-size: 0.85rem; margin-right: 5px; }
-        .btn-del { background: #e74c3c; padding: 6px 12px; font-size: 0.85rem; }
-        .edit-active { border: 2px solid var(--edit); background: #fffcf5; }
+        /* LOADING */
+        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.8); backdrop-filter: blur(2px); z-index: 999; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* OVERLAYS */
-        #adminLogin, #loadingOverlay { position: fixed; inset: 0; background: #2c3e50; display: flex; align-items: center; justify-content: center; z-index: 9999; }
-        #loadingOverlay { background: rgba(255,255,255,0.9); color: var(--primary); font-size: 1.5rem; font-weight: bold; display: none; }
+        /* LOGIN */
+        #loginOverlay { position: fixed; inset: 0; background: var(--dark); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: white; padding: 40px; border-radius: 16px; width: 350px; text-align: center; }
     </style>
 </head>
 <body>
 
-<div id="loadingOverlay">Syncing with Cloud...</div>
+<div id="loader"><div class="spinner"></div><p style="margin-top:10px; font-weight:600; color:var(--primary);">Syncing...</p></div>
+<div id="toast-container"></div>
 
-<div id="adminLogin">
-    <div style="background:white; padding:40px; border-radius:10px; width:320px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-        <h2 style="color:var(--primary); margin-bottom:20px;">Jija Admin</h2>
+<div id="loginOverlay">
+    <div class="login-box">
+        <div style="font-size:3rem; color:var(--primary); margin-bottom:10px;"><i class="ri-store-3-fill"></i></div>
+        <h2>Admin Portal</h2>
+        <p style="color:var(--gray); margin-bottom:20px;">Enter credentials to access</p>
         <input id="adminUser" placeholder="Username" style="margin-bottom:15px;">
         <input id="adminPass" type="password" placeholder="Password" style="margin-bottom:20px;">
-        <button onclick="checkAdminLogin()" style="width:100%;">Secure Login</button>
-        <p id="loginErr" style="color:red; font-size:13px; margin-top:15px;"></p>
+        <button class="btn btn-primary" style="width:100%;" onclick="checkLogin()">Login to Dashboard</button>
     </div>
 </div>
 
 <div class="sidebar">
-    <h2 style="border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px;">Jija Studio</h2>
-    <p style="font-size:13px; opacity:0.7;">Inventory Management</p>
-    <a href="#" style="color:white; text-decoration:none; display:block; padding:10px 0; font-weight:500;">Dashboard</a>
-    <button onclick="clearAllData()" style="background:#c0392b; width:100%; margin-top:50px; font-size:13px;">⚠ Reset Database</button>
+    <div class="brand"><i class="ri-store-3-line"></i> Jija Studio</div>
+    <a href="#" class="nav-item active"><i class="ri-dashboard-line"></i> Dashboard</a>
+    <a href="#productFormCard" class="nav-item"><i class="ri-add-circle-line"></i> Add Product</a>
+    <a href="#inventoryCard" class="nav-item"><i class="ri-archive-line"></i> Inventory</a>
+    <button class="nav-item logout-btn" onclick="logout()"><i class="ri-logout-box-line"></i> Logout</button>
 </div>
 
-<div class="main-content">
-    
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+<div class="main">
+    <div class="header">
         <h1>Dashboard</h1>
         <select id="themeSelect" onchange="saveTheme()" style="width:200px;">
-            <option value="default">🌸 Theme: Default (Pink)</option>
-            <option value="diwali">🎆 Theme: Diwali (Orange)</option>
-            <option value="christmas">🎄 Theme: Christmas (Green)</option>
+            <option value="default">🌸 Default Theme</option>
+            <option value="diwali">🎆 Diwali Theme</option>
+            <option value="christmas">🎄 Christmas Theme</option>
         </select>
     </div>
 
     <div class="card">
-        <h3>📂 Category Management</h3>
-        <div style="background: #f8f9fa; padding:15px; border-radius:6px;">
-            <div class="form-grid">
-                <div>
-                    <label>Main Category</label>
-                    <select id="manageCatSelect" onchange="renderManageSubCats()">
-                        <option value="cloth">Adult Fashion</option>
-                        <option value="kids">Kids Wear</option>
-                        <option value="footwear">Footwear</option>
-                        <option value="jewelry">Jewelry</option>
-                        <option value="toy">Toy</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Add Sub-Category</label>
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="newSubCat" placeholder="e.g. Kaftan">
-                        <button onclick="addSubCategory()" style="width:auto;">Add</button>
-                    </div>
+        <div class="card-title"><i class="ri-price-tag-3-line"></i> Category Management</div>
+        <div class="form-grid">
+            <div>
+                <label>Main Category</label>
+                <select id="manageCatSelect" onchange="renderSubCats()">
+                    <option value="cloth">Adult Fashion</option>
+                    <option value="kids">Kids Wear</option>
+                    <option value="footwear">Footwear</option>
+                    <option value="jewelry">Jewelry</option>
+                    <option value="toy">Toy</option>
+                </select>
+            </div>
+            <div>
+                <label>Add New Sub-Category</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="newSubCat" placeholder="e.g. Saree, Kurti">
+                    <button class="btn btn-primary" onclick="addSubCat()">Add</button>
                 </div>
             </div>
-            <div style="margin-top:15px;">
-                <label>Active Sub-Categories:</label>
-                <div id="manageSubCatList" style="display:flex; gap:5px; flex-wrap:wrap; margin-top:5px;"></div>
-            </div>
+        </div>
+        <div style="margin-top:20px;">
+            <label>Active Sub-Categories (Click to delete):</label>
+            <div id="subCatTags" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;"></div>
         </div>
     </div>
 
     <div class="card" id="productFormCard">
-        <h3 id="formTitle">➕ Add New Product</h3>
+        <div class="card-title"><i class="ri-shirt-line"></i> <span id="formTitle">Add New Product</span></div>
         <div class="form-grid">
-            <div><label>Product Name</label><input type="text" id="pName"></div>
+            <div><label>Product Name</label><input type="text" id="pName" placeholder="Product Title"></div>
             <div>
                 <label>Category</label>
-                <select id="pCat" onchange="toggleCategoryLogic()">
+                <select id="pCat" onchange="toggleFormLogic()">
                     <option value="cloth">Adult Fashion</option>
                     <option value="kids">Kids Wear</option>
                     <option value="footwear">Footwear</option>
@@ -130,320 +148,300 @@
                 </select>
             </div>
             
-            <div class="full-width" style="background: #fff8e1; padding: 20px; border-radius: 6px; border: 1px solid #ffe082;">
-                <label style="color:#f57f17; font-size:1rem; margin-bottom:10px;">💰 Pricing</label>
+            <div class="full-width" style="background:#fffcf5; padding:20px; border-radius:8px; border:1px solid #fcd34d;">
+                <label style="color:#b45309; font-size:1rem; margin-bottom:15px;"><i class="ri-money-dollar-circle-line"></i> Pricing</label>
                 <div class="form-grid">
                     <div><label>MRP (₹)</label><input type="number" id="pMRP" placeholder="2000"></div>
                     <div><label>Selling Price (₹)</label><input type="number" id="pPrice" placeholder="1500"></div>
                 </div>
             </div>
 
-            <div><label>Sub-Category</label><select id="pSubCat" onchange="renderStockInputs()"><option value="">Select...</option></select></div>
-            
-            <div class="full-width" style="background: #f0f4f8; padding: 20px; border-radius: 6px;">
-                <label style="color:#2c3e50; font-size:1rem; margin-bottom:10px;">📸 Media Links</label>
-                <div class="form-grid">
-                    <div><label>Main Image URL</label><input type="text" id="pImg" placeholder="https://..."></div>
-                    <div><label>Image 2 URL</label><input type="text" id="pImg2"></div>
-                    <div><label>Image 3 URL</label><input type="text" id="pImg3"></div>
-                    <div><label>Video URL</label><input type="text" id="pVideo"></div>
+            <div><label>Sub-Category</label><select id="pSubCat"><option value="">Select...</option></select></div>
+            <div>
+                <div style="margin-top:28px; display:flex; align-items:center; gap:10px;">
+                    <input type="checkbox" id="pBanner" style="width:20px; height:20px;">
+                    <label for="pBanner" style="margin:0; cursor:pointer;">Promote in Home Banner</label>
                 </div>
+            </div>
+
+            <div class="full-width">
+                <label>Image URLs (Paste links from PostImages.org)</label>
+                <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+                    <input type="text" id="pImg" placeholder="Main Image URL">
+                    <input type="text" id="pImg2" placeholder="Image 2 (Opt)">
+                    <input type="text" id="pImg3" placeholder="Image 3 (Opt)">
+                </div>
+                <input type="text" id="pVideo" placeholder="YouTube Video URL (Optional)" style="margin-top:10px;">
             </div>
 
             <div class="full-width"><label>Description</label><textarea id="pDesc" rows="3"></textarea></div>
         </div>
 
-        <div style="margin-top:20px; background:#f9f9f9; padding:10px; border-radius:5px; display:flex; align-items:center; gap:10px;">
-            <input type="checkbox" id="pBanner" style="width:20px; height:20px;">
-            <label for="pBanner" style="margin:0; cursor:pointer;">Promote in Home Page Slider</label>
-        </div>
-
-        <div id="stockSection" style="margin-top: 20px; padding: 20px; background: #e8f6f3; border: 1px dashed #27ae60; border-radius: 6px; display:none;">
-            <label style="color:#27ae60; font-size:1rem;">📦 Inventory Stock</label>
+        <div id="stockSection" style="margin-top:25px; padding:20px; background:#f0fdf4; border:1px dashed #10b981; border-radius:8px; display:none;">
+            <label style="color:#15803d; font-size:1rem; margin-bottom:10px;"><i class="ri-stack-line"></i> Inventory Stock</label>
             <div id="stockContainer" class="stock-grid"></div>
         </div>
-        <div id="simpleStockOption" style="display:none; margin-top:20px; padding: 20px; background: #e8f6f3; border: 1px dashed #27ae60; border-radius: 6px;">
-            <label style="color:#27ae60; font-size:1rem;">📦 Total Stock Quantity</label> 
-            <input type="number" id="pSimpleStock" value="10" style="width:100px; margin-top:5px;">
+        
+        <div id="simpleStockSection" style="margin-top:25px; padding:20px; background:#f0fdf4; border:1px dashed #10b981; border-radius:8px; display:none;">
+            <label style="color:#15803d;">Total Stock Quantity</label>
+            <input type="number" id="pSimpleStock" value="10" style="width:150px; margin-top:5px;">
         </div>
 
-        <div style="margin-top: 30px; display:flex; gap:10px;">
-            <button id="submitBtn" onclick="handleFormSubmit()" style="flex:1;">Save Product to Cloud</button>
-            <button id="cancelEditBtn" onclick="exitEditMode()" style="background:#7f8c8d; display:none;">Cancel</button>
+        <div style="margin-top:30px; display:flex; gap:15px;">
+            <button class="btn btn-primary" id="submitBtn" onclick="submitProduct()"><i class="ri-save-3-line"></i> Save Product</button>
+            <button class="btn btn-outline" id="cancelBtn" onclick="resetForm()" style="display:none;">Cancel Edit</button>
         </div>
     </div>
 
-    <div class="card">
-        <h3>📦 Live Inventory</h3>
-        <table>
-            <thead><tr><th>Image</th><th>Details</th><th>Price</th><th>Stock Status</th><th>Actions</th></tr></thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+    <div class="card" id="inventoryCard">
+        <div class="card-title"><i class="ri-list-check"></i> Live Inventory</div>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Product</th><th>Pricing</th><th>Stock Level</th><th>Actions</th></tr></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    // --- CONFIGURATION ---
-    const DB_URL = "https://jija-studio-default-rtdb.firebaseio.com/jijaData.json"; // 👈 Your Real Database URL
-    const ADMIN_USER = "admin";      
-    const ADMIN_PASS = "12345";      
+    // --- CONFIG ---
+    const DB_URL = "https://jija-studio-default-rtdb.firebaseio.com/jijaData.json";
+    const CREDS = { u: "admin", p: "12345" }; // 👈 Change credentials here
 
     // --- STATE ---
-    let appData = { 
-        products: [], 
-        subCategories: { 
-            cloth: ["Saree", "Suits"], 
-            kids: ["Boys", "Girls"], 
-            footwear: ["Shoes", "Sandals"], 
-            jewelry: ["Necklace", "Bangles"], 
-            toy: ["Cars"] 
-        } 
+    let appData = { products: [], subCategories: { cloth: ["Saree"], kids: ["Boys"], footwear: ["Shoes"], jewelry: ["Necklace"], toy: ["Cars"] } };
+    let editId = null;
+
+    // --- SIZES ---
+    const SIZES = {
+        cloth: ["S", "M", "L", "XL", "XXL", "3XL", "4XL", "Free Size"],
+        kids: ["0-1Y", "1-2Y", "2-3Y", "3-4Y", "4-5Y", "5-6Y", "6-7Y", "7-8Y", "8-9Y", "9-10Y", "11-12Y", "13-14Y"],
+        footwear: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+        jewelry: ["2-2", "2-4", "2-6", "2-8", "2-10", "Free Size"]
     };
-    let editingId = null;
 
-    // --- SIZES CONSTANTS ---
-    const ADULT_SIZES = ["S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL", "6XL", "Free Size"];
-    const KIDS_SIZES = ["0-1Y", "1-2Y", "2-3Y", "3-4Y", "4-5Y", "5-6Y", "6-7Y", "7-8Y", "8-9Y", "9-10Y", "11-12Y", "13-14Y"];
-    const BANGLE_SIZES = ["2-2", "2-4", "2-6", "2-8", "2-10"];
-    const FOOTWEAR_SIZES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-
-    // --- INITIALIZATION ---
+    // --- INIT ---
     window.onload = function() {
-        if (sessionStorage.getItem('adminLogged') === 'yes') {
-            document.getElementById('adminLogin').style.display = 'none';
-            loadFromCloud();
+        if(sessionStorage.getItem('jijaLogged') === 'true') {
+            document.getElementById('loginOverlay').style.display = 'none';
+            loadData();
         }
-        const savedTheme = localStorage.getItem('jijaTheme');
-        if(savedTheme) document.getElementById('themeSelect').value = savedTheme;
+        const t = localStorage.getItem('jijaTheme');
+        if(t) document.getElementById('themeSelect').value = t;
     };
 
-    function checkAdminLogin() {
-        const u = document.getElementById('adminUser').value;
-        const p = document.getElementById('adminPass').value;
-        if (u === ADMIN_USER && p === ADMIN_PASS) {
-            sessionStorage.setItem('adminLogged', 'yes');
-            document.getElementById('adminLogin').style.display = 'none';
-            loadFromCloud();
-        } else {
-            document.getElementById('loginErr').innerText = "Incorrect username or password.";
-        }
+    function showToast(msg, type='success') {
+        const t = document.createElement('div');
+        t.className = `toast ${type}`;
+        t.innerHTML = `<i class="${type==='success'?'ri-checkbox-circle-fill':'ri-error-warning-fill'}" style="color:${type==='success'?'var(--green)':'var(--red)'}; font-size:1.2rem;"></i> <span>${msg}</span>`;
+        document.getElementById('toast-container').appendChild(t);
+        setTimeout(() => t.remove(), 3000);
     }
 
-    // --- CLOUD FUNCTIONS ---
-    function loadFromCloud() {
-        document.getElementById('loadingOverlay').style.display = 'flex';
-        fetch(DB_URL)
-            .then(r => r.json())
-            .then(data => {
-                if (data) {
-                    appData = data;
-                    if(Array.isArray(appData.subCategories)) { // Fix potential array issue
-                        appData.subCategories = { cloth: appData.subCategories, kids: ["Boys"], footwear: ["Shoes"], jewelry: ["Necklace"], toy: ["Cars"] };
-                    }
-                }
-                refreshUI();
-                document.getElementById('loadingOverlay').style.display = 'none';
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Failed to load data from Cloud.");
-                document.getElementById('loadingOverlay').style.display = 'none';
-            });
+    function checkLogin() {
+        if(document.getElementById('adminUser').value === CREDS.u && document.getElementById('adminPass').value === CREDS.p) {
+            sessionStorage.setItem('jijaLogged', 'true');
+            document.getElementById('loginOverlay').style.display = 'none';
+            loadData();
+            showToast("Welcome Back, Admin!");
+        } else showToast("Invalid Credentials", 'error');
     }
 
-    function saveToCloud() {
-        document.getElementById('loadingOverlay').style.display = 'flex';
-        fetch(DB_URL, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(appData)
-        })
-        .then(() => {
-            document.getElementById('loadingOverlay').style.display = 'none';
-            alert("✅ Saved to Cloud Successfully!");
-            refreshUI();
-        })
-        .catch(err => {
-            document.getElementById('loadingOverlay').style.display = 'none';
-            alert("❌ Save Failed: " + err);
-        });
+    function logout() {
+        sessionStorage.removeItem('jijaLogged');
+        location.reload();
     }
 
-    function refreshUI() {
-        renderManageSubCats();
-        toggleCategoryLogic();
-        renderTable();
-    }
-
-    // --- UI LOGIC ---
     function saveTheme() {
         localStorage.setItem('jijaTheme', document.getElementById('themeSelect').value);
-        alert("Theme saved! Customers will see this theme.");
+        showToast("Theme Updated for Customers");
     }
 
-    function renderManageSubCats() {
-        const main = document.getElementById('manageCatSelect').value;
-        const list = appData.subCategories[main] || [];
-        document.getElementById('manageSubCatList').innerHTML = list.map(c => 
-            `<span style="background:#e0e0e0; padding:5px 10px; border-radius:15px; font-size:12px;">${c} <span onclick="removeSubCat('${main}','${c}')" style="color:red; cursor:pointer; margin-left:5px; font-weight:bold;">&times;</span></span>`
+    // --- DATA ---
+    async function loadData() {
+        document.getElementById('loader').style.display = 'flex';
+        try {
+            const r = await fetch(DB_URL);
+            const d = await r.json();
+            if(d) {
+                appData = d;
+                // Fix legacy array structure
+                if(Array.isArray(appData.subCategories)) {
+                    appData.subCategories = { cloth: appData.subCategories, kids: ["Boys"], footwear: ["Shoes"], jewelry: ["Necklace"], toy: ["Cars"] };
+                }
+            }
+            refreshUI();
+        } catch(e) { showToast("Failed to load data", 'error'); } 
+        finally { document.getElementById('loader').style.display = 'none'; }
+    }
+
+    async function saveData() {
+        document.getElementById('loader').style.display = 'flex';
+        try {
+            await fetch(DB_URL, { method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify(appData) });
+            refreshUI();
+            showToast("Data Synced Successfully");
+        } catch(e) { showToast("Save Failed", 'error'); } 
+        finally { document.getElementById('loader').style.display = 'none'; }
+    }
+
+    function refreshUI() { renderSubCats(); toggleFormLogic(); renderTable(); }
+
+    // --- LOGIC ---
+    function renderSubCats() {
+        const cat = document.getElementById('manageCatSelect').value;
+        const subs = appData.subCategories[cat] || [];
+        document.getElementById('subCatTags').innerHTML = subs.map(s => 
+            `<span style="background:#e2e8f0; padding:6px 12px; border-radius:20px; font-size:0.85rem; display:flex; align-items:center; gap:5px;">
+                ${s} <i class="ri-close-circle-fill" onclick="delSubCat('${cat}','${s}')" style="cursor:pointer; color:var(--gray);"></i>
+            </span>`
         ).join('');
-        if(document.getElementById('pCat').value === main) updateProductSubCatDropdown(main);
+        if(document.getElementById('pCat').value === cat) fillSubDropdown(cat);
     }
 
-    function addSubCategory() {
-        const main = document.getElementById('manageCatSelect').value;
-        const txt = document.getElementById('newSubCat').value;
-        if(txt) {
-            if(!appData.subCategories[main]) appData.subCategories[main] = [];
-            appData.subCategories[main].push(txt);
-            document.getElementById('newSubCat').value="";
-            saveToCloud();
+    function addSubCat() {
+        const cat = document.getElementById('manageCatSelect').value;
+        const val = document.getElementById('newSubCat').value.trim();
+        if(val) {
+            if(!appData.subCategories[cat]) appData.subCategories[cat] = [];
+            appData.subCategories[cat].push(val);
+            document.getElementById('newSubCat').value = "";
+            saveData();
         }
     }
 
-    function removeSubCat(main, sub) {
-        if(confirm("Delete sub-category " + sub + "?")) {
-            appData.subCategories[main] = appData.subCategories[main].filter(c => c !== sub);
-            saveToCloud();
+    function delSubCat(cat, sub) {
+        if(confirm(`Remove ${sub}?`)) {
+            appData.subCategories[cat] = appData.subCategories[cat].filter(s => s !== sub);
+            saveData();
         }
     }
 
-    function updateProductSubCatDropdown(mainCat) {
-        const list = appData.subCategories[mainCat] || [];
-        document.getElementById('pSubCat').innerHTML = '<option value="">Select Sub-Type</option>' + list.map(c=>`<option value="${c}">${c}</option>`).join('');
+    function fillSubDropdown(cat) {
+        const subs = appData.subCategories[cat] || [];
+        const sel = document.getElementById('pSubCat');
+        const current = sel.value;
+        sel.innerHTML = '<option value="">Select...</option>' + subs.map(s => `<option value="${s}">${s}</option>`).join('');
+        if(subs.includes(current)) sel.value = current;
     }
 
-    function toggleCategoryLogic() {
+    function toggleFormLogic() {
         const cat = document.getElementById('pCat').value;
-        updateProductSubCatDropdown(cat);
-        const complexCats = ['cloth', 'kids', 'jewelry', 'footwear'];
-        if(complexCats.includes(cat)) {
-            document.getElementById('stockSection').style.display = 'block';
-            document.getElementById('simpleStockOption').style.display = 'none';
-            renderStockInputs(cat);
+        fillSubDropdown(cat);
+        const stockGrid = document.getElementById('stockSection');
+        const simpleStock = document.getElementById('simpleStockSection');
+        
+        if(['cloth','kids','footwear','jewelry'].includes(cat)) {
+            stockGrid.style.display = 'block';
+            simpleStock.style.display = 'none';
+            renderGridInputs(cat);
         } else {
-            document.getElementById('stockSection').style.display = 'none';
-            document.getElementById('simpleStockOption').style.display = 'block';
+            stockGrid.style.display = 'none';
+            simpleStock.style.display = 'block';
         }
     }
 
-    function renderStockInputs(cat) {
-        if(!cat) cat = document.getElementById('pCat').value;
-        const subCat = document.getElementById('pSubCat').value.toLowerCase();
-        const container = document.getElementById('stockContainer');
-        container.innerHTML = "";
-        
-        let sizes = [];
-        if (cat === 'footwear') sizes = FOOTWEAR_SIZES;
-        else if (cat === 'kids') sizes = KIDS_SIZES;
-        else if (cat === 'jewelry' && subCat.includes('bangle')) sizes = BANGLE_SIZES;
-        else if (cat === 'jewelry') sizes = ["Free Size"];
-        else if (cat === 'cloth') sizes = ADULT_SIZES;
-        else sizes = ["General"];
-
-        sizes.forEach(size => {
-            container.innerHTML += `<div class="stock-item"><label>${size}</label><input type="number" class="size-input" data-label="${size}" placeholder="0"></div>`;
+    function renderGridInputs(cat) {
+        const div = document.getElementById('stockContainer');
+        div.innerHTML = "";
+        let arr = SIZES[cat] || ["General"];
+        arr.forEach(s => {
+            div.innerHTML += `<div class="stock-input-group"><label>${s}</label><input type="number" class="grid-stock" data-size="${s}" value="0"></div>`;
         });
     }
 
-    function handleFormSubmit() {
+    function submitProduct() {
         const name = document.getElementById('pName').value;
         const price = document.getElementById('pPrice').value;
-        if(!name || !price) return alert("Product Name and Price are required.");
+        if(!name || !price) return showToast("Name and Price are required", 'error');
 
         const cat = document.getElementById('pCat').value;
-        let stockData = {};
+        let stock = {};
         
         if(document.getElementById('stockSection').style.display !== 'none') {
-            document.querySelectorAll('.size-input').forEach(inp => {
-                stockData[inp.getAttribute('data-label')] = parseInt(inp.value) || 0;
-            });
+            document.querySelectorAll('.grid-stock').forEach(i => stock[i.dataset.size] = parseInt(i.value)||0);
         } else {
-            stockData["General"] = parseInt(document.getElementById('pSimpleStock').value) || 0;
+            stock["General"] = parseInt(document.getElementById('pSimpleStock').value)||0;
         }
 
-        const productObj = {
-            id: editingId ? editingId : Date.now(),
-            name: name,
-            price: price,
-            mrp: document.getElementById('pMRP').value,
-            cat: cat,
-            subCat: document.getElementById('pSubCat').value,
-            img: document.getElementById('pImg').value || "https://via.placeholder.com/150",
+        const prod = {
+            id: editId || Date.now(),
+            name, price, mrp: document.getElementById('pMRP').value,
+            cat, subCat: document.getElementById('pSubCat').value,
+            img: document.getElementById('pImg').value,
             img2: document.getElementById('pImg2').value,
             img3: document.getElementById('pImg3').value,
             video: document.getElementById('pVideo').value,
             desc: document.getElementById('pDesc').value,
             isBanner: document.getElementById('pBanner').checked,
-            stock: stockData
+            stock
         };
 
-        if(editingId) {
-            const index = appData.products.findIndex(p => p.id === editingId);
-            appData.products[index] = productObj;
+        if(editId) {
+            const idx = appData.products.findIndex(p => p.id === editId);
+            appData.products[idx] = prod;
         } else {
-            appData.products.push(productObj);
+            appData.products.push(prod);
         }
         
-        saveToCloud();
-        exitEditMode();
+        resetForm();
+        saveData();
     }
 
-    function editProduct(id) {
-        const p = appData.products.find(prod => prod.id === id);
+    function startEdit(id) {
+        const p = appData.products.find(x => x.id === id);
         if(!p) return;
-        editingId = id;
+        editId = id;
         
-        document.getElementById('productFormCard').scrollIntoView({ behavior: 'smooth' });
-        document.getElementById('productFormCard').classList.add('edit-active');
-        document.getElementById('formTitle').innerText = "✏️ Edit Product";
-        document.getElementById('submitBtn').innerText = "Update Product";
-        document.getElementById('cancelEditBtn').style.display = "block";
+        document.getElementById('formTitle').innerText = "Edit Product";
+        document.getElementById('submitBtn').innerHTML = "<i class='ri-refresh-line'></i> Update Product";
+        document.getElementById('cancelBtn').style.display = "block";
+        document.getElementById('productFormCard').scrollIntoView({behavior:'smooth'});
 
         document.getElementById('pName').value = p.name;
         document.getElementById('pPrice').value = p.price;
         document.getElementById('pMRP').value = p.mrp || "";
         document.getElementById('pCat').value = p.cat;
-        document.getElementById('pImg').value = p.img;
+        document.getElementById('pImg').value = p.img || "";
         document.getElementById('pImg2').value = p.img2 || "";
         document.getElementById('pImg3').value = p.img3 || "";
         document.getElementById('pVideo').value = p.video || "";
         document.getElementById('pDesc').value = p.desc || "";
-        document.getElementById('pBanner').checked = p.isBanner || false;
+        document.getElementById('pBanner').checked = p.isBanner;
 
-        toggleCategoryLogic();
+        toggleFormLogic();
         document.getElementById('pSubCat').value = p.subCat;
-        renderStockInputs(p.cat);
 
+        // Fill Stock
         setTimeout(() => {
             if(document.getElementById('stockSection').style.display !== 'none') {
-                document.querySelectorAll('.size-input').forEach(inp => {
-                    const label = inp.getAttribute('data-label');
-                    if(p.stock[label] !== undefined) inp.value = p.stock[label];
+                document.querySelectorAll('.grid-stock').forEach(i => {
+                    if(p.stock[i.dataset.size] !== undefined) i.value = p.stock[i.dataset.size];
                 });
             } else {
-                document.getElementById('pSimpleStock').value = p.stock["General"];
+                document.getElementById('pSimpleStock').value = p.stock["General"] || 0;
             }
         }, 50);
     }
 
-    function exitEditMode() {
-        editingId = null;
-        document.getElementById('productFormCard').classList.remove('edit-active');
-        document.getElementById('formTitle').innerText = "➕ Add New Product";
-        document.getElementById('submitBtn').innerText = "Save Product to Cloud";
-        document.getElementById('cancelEditBtn').style.display = "none";
+    function resetForm() {
+        editId = null;
+        document.getElementById('formTitle').innerText = "Add New Product";
+        document.getElementById('submitBtn').innerHTML = "<i class='ri-save-3-line'></i> Save Product";
+        document.getElementById('cancelBtn').style.display = "none";
         
-        document.getElementById('pName').value=""; document.getElementById('pPrice').value=""; document.getElementById('pMRP').value="";
-        document.getElementById('pImg').value=""; document.getElementById('pImg2').value=""; document.getElementById('pImg3').value=""; 
-        document.getElementById('pVideo').value=""; document.getElementById('pDesc').value=""; document.getElementById('pBanner').checked=false;
-        document.querySelectorAll('input[type=number]').forEach(i => i.value="");
+        document.querySelectorAll('input, textarea').forEach(i => i.value = "");
+        document.getElementById('pBanner').checked = false;
+        // Defaults
+        document.getElementById('pCat').value = "cloth";
+        toggleFormLogic();
     }
 
-    function deleteProduct(id) {
-        if(confirm("Are you sure you want to delete this product?")) {
+    function deleteProd(id) {
+        if(confirm("Delete this product?")) {
             appData.products = appData.products.filter(p => p.id !== id);
-            saveToCloud();
+            saveData();
         }
     }
 
@@ -451,46 +449,45 @@
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = "";
         
-        if(appData.products.length === 0) {
-            tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; padding:20px;'>No products found. Add one above!</td></tr>";
+        if(!appData.products.length) {
+            tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:30px; color:#94a3b8;'>No products yet. Add one above!</td></tr>";
             return;
         }
 
-        // Show newest first
         appData.products.slice().reverse().forEach(p => {
-            const bannerBadge = p.isBanner ? '<span class="badge badge-banner">Banner</span>' : '';
-            
-            let stockDisplay = "";
-            for(const [key, qty] of Object.entries(p.stock)) {
-                const badgeClass = qty > 0 ? 'badge-stock' : 'badge-zero';
-                stockDisplay += `<span class="badge ${badgeClass}">${key}: ${qty}</span>`;
+            let stockHtml = "";
+            let total = 0;
+            for(let [k,v] of Object.entries(p.stock)) {
+                total += v;
+                if(v > 0) stockHtml += `<span style="font-size:0.75rem; background:#e2e8f0; padding:2px 6px; border-radius:4px; margin:2px; display:inline-block;">${k}: ${v}</span>`;
             }
-
+            
             tbody.innerHTML += `
             <tr>
-                <td><img src="${p.img}" class="img-preview" onerror="this.src='https://via.placeholder.com/50'"></td>
+                <td><img src="${p.img}" class="img-thumb" onerror="this.src='https://via.placeholder.com/50'"></td>
                 <td>
-                    <strong>${p.name}</strong> ${bannerBadge}<br>
-                    <small style="color:#777;">${p.cat} > ${p.subCat}</small>
+                    <div style="font-weight:600; color:var(--dark);">${p.name}</div>
+                    <div style="font-size:0.8rem; color:var(--gray);">${p.cat} > ${p.subCat}</div>
+                    ${p.isBanner ? '<span style="font-size:0.7rem; background:var(--green); color:white; padding:1px 5px; border-radius:3px;">BANNER</span>' : ''}
                 </td>
                 <td>
-                    <div style="font-weight:bold;">₹${p.price}</div>
-                    <div style="text-decoration:line-through; font-size:0.8rem; color:#999;">₹${p.mrp||'-'}</div>
+                    <div style="font-weight:600;">₹${p.price}</div>
+                    <div style="font-size:0.8rem; text-decoration:line-through; color:#cbd5e1;">${p.mrp? '₹'+p.mrp : ''}</div>
                 </td>
-                <td><div style="max-width:300px; line-height:1.5;">${stockDisplay}</div></td>
                 <td>
-                    <button class="btn-edit" onclick="editProduct(${p.id})">Edit</button>
-                    <button class="btn-del" onclick="deleteProduct(${p.id})">Delete</button>
+                    <div style="margin-bottom:5px;">
+                        <span style="font-size:0.8rem; font-weight:bold; color:${total>0?'var(--green)':'var(--red)'};">
+                            ${total>0 ? 'In Stock' : 'Out of Stock'}
+                        </span>
+                    </div>
+                    <div style="max-width:250px;">${stockHtml}</div>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline" onclick="startEdit(${p.id})"><i class="ri-pencil-line"></i></button>
+                    <button class="btn btn-sm" style="color:var(--red); background:rgba(239,68,68,0.1);" onclick="deleteProd(${p.id})"><i class="ri-delete-bin-line"></i></button>
                 </td>
             </tr>`;
         });
-    }
-
-    function clearAllData() {
-        if(confirm("⚠️ DANGER: This will delete ALL products from the Cloud. Are you sure?")) {
-            appData = { products: [], subCategories: appData.subCategories };
-            saveToCloud();
-        }
     }
 </script>
 </body>
