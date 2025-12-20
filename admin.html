@@ -361,7 +361,7 @@
     }
     function clearAllData() { if(confirm("RESET ALL?")) { localStorage.removeItem('jijaData'); location.reload(); } }
 </script>
-<!-- Firebase -->
+<!-- 🔥 Firebase Sync -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
@@ -378,17 +378,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔄 Override saveData() to save to Firebase
+// ✅ Save admin data to Firebase
 window.saveData = async function () {
   try {
     await setDoc(doc(db, "store", "inventory"), appData);
-    console.log("Saved to Firebase");
+    console.log("🔥 Saved to Firebase");
   } catch (e) {
-    console.error("Firebase save error", e);
+    alert("Firebase save error");
+    console.error(e);
   }
 };
 
-// 🔄 Load data from Firebase on start
+// ✅ Load Firebase data when admin opens
 window.addEventListener("load", async () => {
   try {
     const snap = await getDoc(doc(db, "store", "inventory"));
@@ -397,6 +398,7 @@ window.addEventListener("load", async () => {
       renderManageSubCats();
       toggleCategoryLogic();
       renderTable();
+      console.log("🔥 Loaded from Firebase");
     }
   } catch (e) {
     console.error("Firebase load error", e);
