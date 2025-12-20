@@ -11,12 +11,14 @@
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); display: flex; height: 100vh; color: #334155; }
         
         .sidebar { width: 260px; background: var(--dark); color: white; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; }
-        .brand { font-size: 1.5rem; font-weight: 600; color: var(--primary); margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+        .brand { font-size: 1.4rem; font-weight: 600; color: var(--primary); margin-bottom: 30px; display: flex; align-items: center; gap: 12px; }
         .brand img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); background: white; }
+
         .nav-item { padding: 12px; color: #94a3b8; display: flex; gap: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; text-decoration: none; margin-bottom: 5px; }
         .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
         
-        .main { flex: 1; overflow-y: auto; padding: 30px; }
+        .main { flex: 1; overflow-y: auto; padding: 30px; position: relative; }
+        
         .card { background: white; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
         .card-header { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
         
@@ -27,7 +29,7 @@
         .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
 
         /* TAGS FOR SUB-CATS */
-        .sub-tag { background: #e2e8f0; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; margin: 3px; }
+        .sub-tag { background: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; margin: 3px; border: 1px solid #cbd5e1; }
         .sub-tag i { color: var(--red); cursor: pointer; }
 
         /* STOCK GRID */
@@ -42,11 +44,14 @@
         td { padding: 12px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         .thumb { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; border: 1px solid #e2e8f0; }
         
-        /* ORDER STATUS */
         .status-select { padding: 5px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; cursor: pointer; }
         .status-Ordered { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
         .status-Shipped { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
         .status-Delivered { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+        
+        .stock-tag { display: inline-block; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; margin: 2px; border: 1px solid #e2e8f0; background: #f8fafc; }
+        .stock-tag.low { color: var(--red); border-color: #fca5a5; background: #fef2f2; }
+        .stock-tag.ok { color: var(--green); border-color: #86efac; background: #f0fdf4; }
 
         /* SECTIONS & LOADER */
         .section { display: none; }
@@ -66,9 +71,13 @@
         <img src="logo.jpg" onerror="this.src='https://via.placeholder.com/50?text=Logo'">
         Jija Admin
     </div>
+    
     <div class="nav-item active" onclick="showSection('orderSection', this)"><i class="ri-shopping-bag-3-line"></i> Order Manager</div>
+    
     <div class="nav-item" onclick="showSection('catSection', this)"><i class="ri-layout-grid-line"></i> Manage Categories</div>
+    
     <div class="nav-item" onclick="showSection('prodSection', this)"><i class="ri-add-circle-line"></i> Products</div>
+    <div class="nav-item" onclick="showSection('layoutSection', this)"><i class="ri-layout-masonry-line"></i> Store Layout</div>
     <div class="nav-item" onclick="showSection('invSection', this)"><i class="ri-list-check"></i> Inventory</div>
 </div>
 
@@ -92,7 +101,7 @@
     <div id="catSection" class="section">
         
         <div class="card">
-            <div class="card-header">Manage Sub-Categories</div>
+            <div class="card-header">Add New Sub-Category</div>
             <div style="display: flex; gap: 10px; align-items: center;">
                 <select id="manageCat" style="width: 200px;" onchange="renderManageTags()">
                     <option value="cloth">Adult Fashion</option>
@@ -104,9 +113,9 @@
                 <input id="newSubName" placeholder="New Name (e.g. Lehenga)" style="flex:1; margin-bottom:0;">
                 <button class="btn btn-primary" onclick="addNewSubCategory()">Add</button>
             </div>
-            <div style="margin-top:15px;">
-                <label>Active Sub-Categories:</label>
-                <div id="activeSubTags" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;"></div>
+            <div style="margin-top:20px;">
+                <label style="font-weight:600; color:#64748b;">Active Sub-Categories (Click X to delete):</label>
+                <div id="activeSubTags" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;"></div>
             </div>
         </div>
 
@@ -169,6 +178,16 @@
         </div>
     </div>
 
+    <div id="layoutSection" class="section">
+        <div class="card">
+            <div class="card-header">
+                <span>Manage Homepage Order</span>
+                <button class="btn btn-primary" onclick="saveData()">Save Layout</button>
+            </div>
+            <div id="layoutList"></div>
+        </div>
+    </div>
+
     <div id="invSection" class="section">
         <div class="card">
             <div class="card-header">Current Inventory</div>
@@ -184,16 +203,16 @@
     const DB_URL = "https://jija-studio-default-rtdb.firebaseio.com/jijaData.json";
     const ORDERS_URL = "https://jija-studio-default-rtdb.firebaseio.com/orders.json";
     
-    // Default structure to prevent crashes
+    // Default structure
     let appData = { 
         products: [], 
         catBanners: [], 
         subCategories: { 
-            cloth: ["Saree", "Kurti", "Lehenga"], 
+            cloth: ["Saree", "Kurti"], 
             kids: ["Boys", "Girls"], 
             footwear: ["Shoes", "Sandals"], 
             jewelry: ["Necklace", "Bangles"], 
-            toy: ["Cars", "Dolls"] 
+            toy: ["Cars"] 
         } 
     };
     let ordersData = {};
@@ -213,8 +232,9 @@
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         if(btn) btn.classList.add('active');
-        // Initial renders for specific tabs
+        // Initial renders
         if(id === 'catSection') { renderManageTags(); renderBanners(); }
+        if(id === 'layoutSection') renderLayoutEditor();
     }
 
     async function loadData() {
@@ -246,13 +266,13 @@
 
     function refreshUI() {
         renderOrders();
-        renderSubSelect(); // Updates Product Form
-        renderManageTags(); // Updates Category Manager
+        renderSubSelect(); 
+        renderManageTags(); 
         renderTable();
         renderBanners();
     }
 
-    // --- CATEGORY MANAGER LOGIC (NEW) ---
+    // --- CATEGORY MANAGER LOGIC ---
     function renderManageTags() {
         const cat = document.getElementById('manageCat').value;
         const subs = appData.subCategories[cat] || [];
@@ -291,7 +311,6 @@
         let html = subs.map(s => `<div style="margin:2px 0;"><input type="checkbox" value="${s}" name="subcat"> ${s}</div>`).join('');
         document.getElementById('subCatBox').innerHTML = html || "<small>No sub-categories</small>";
         
-        // Populate Banner Dropdown too
         let allSubs = [];
         for(let k in appData.subCategories) allSubs = [...allSubs, ...appData.subCategories[k]];
         document.getElementById('banCat').innerHTML = '<option value="">Link To...</option>' + allSubs.map(s => `<option value="${s}">${s}</option>`).join('');
@@ -395,7 +414,7 @@
         }
     }
 
-    // --- TABLES & ORDERS ---
+    // --- OTHER UI LOGIC ---
     function renderTable() {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = "";
@@ -453,6 +472,21 @@
         renderOrders();
         document.getElementById('loader').style.display = 'none';
     }
+
+    function renderLayoutEditor() {
+        const list = document.getElementById('layoutList');
+        const sorted = [...appData.products].sort((a,b) => (a.rank||100) - (b.rank||100));
+        list.innerHTML = sorted.map(p => `
+            <div class="layout-item">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="${p.img}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
+                    <div><strong>${p.name}</strong></div>
+                </div>
+                <input type="number" class="rank-input" value="${p.rank || 100}" onchange="updateRank(${p.id}, this.value)">
+            </div>
+        `).join('');
+    }
+    function updateRank(id, val) { const p = appData.products.find(x => x.id === id); if(p) p.rank = parseInt(val); }
 
     function addCategoryBanner() {
         const sub = document.getElementById('banCat').value;
