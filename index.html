@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         :root { --primary: #D81B60; --dark: #1e293b; --light: #f8fafc; --white: #ffffff; --green: #10b981; }
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); padding-bottom: 80px; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); padding-bottom: 80px; overflow-x: hidden; }
         
         header { background: var(--primary); padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .cart-btn { background: white; color: var(--primary); padding: 8px 15px; border-radius: 20px; font-weight: 600; border: none; cursor: pointer; }
@@ -63,6 +63,21 @@
         
         .review-box { margin-top: 20px; padding-top: 10px; border-top: 1px solid #eee; }
         .review-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.85rem; }
+
+        /* --- ✨ THEME ANIMATION CSS --- */
+        .theme-particle {
+            position: fixed;
+            top: -10%;
+            user-select: none;
+            pointer-events: none;
+            z-index: 10; /* Behind Modals(2000) and Header(100), but above content */
+            animation: fall linear forwards;
+            opacity: 0.8;
+        }
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -180,6 +195,9 @@
         let currentCat = 'all';
 
         window.onload = async () => {
+            applyTheme(); // 1. Theme First
+            startThemeAnimations(); // 2. Start Floating Characters
+            
             const r = await fetch(DB_URL);
             const d = await r.json();
             if(d) {
@@ -191,6 +209,66 @@
                 initSlider();
             }
         };
+
+        // --- ✨ ANIMATION ENGINE ---
+        function startThemeAnimations() {
+            let t = localStorage.getItem('jijaTheme');
+            if(!t || t === 'auto') {
+                const d = new Date();
+                const m = d.getMonth() + 1; 
+                if (m===10 || m===11) t = 'diwali';
+                else if (m===12) t = 'christmas';
+                else if (m===3) t = 'holi';
+                else if (m===2) t = 'valentine';
+                else t = 'default';
+            }
+
+            // Define Particles
+            let symbols = [];
+            if(t === 'christmas') symbols = ['❄️', '⛄', '🎄'];
+            else if(t === 'diwali') symbols = ['🪔', '✨', '🎆'];
+            else if(t === 'holi') symbols = ['🟣', '🟡', '🟢', '🔴'];
+            else if(t === 'valentine') symbols = ['❤️', '💖', '💌'];
+            else if(t === 'newyear') symbols = ['🎉', '🥂', '🎊'];
+            else return; // No animation for default
+
+            // Spawner
+            setInterval(() => {
+                const p = document.createElement('div');
+                p.classList.add('theme-particle');
+                p.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                p.style.animationDuration = (Math.random() * 3 + 4) + 's'; // 4-7s fall time
+                document.body.appendChild(p);
+                
+                // Cleanup
+                setTimeout(() => p.remove(), 7000);
+            }, 800); // 1 particle every 800ms
+        }
+
+        function applyTheme() {
+            let t = localStorage.getItem('jijaTheme');
+            if (!t || t === 'auto') {
+                const d = new Date();
+                const m = d.getMonth() + 1;
+                const day = d.getDate();
+                if (m === 10 || m === 11) t = 'diwali';
+                else if (m === 12 && day > 10) t = 'christmas';
+                else if (m === 1 || (m === 12 && day === 31)) t = 'newyear';
+                else if (m === 2 && day > 7 && day < 15) t = 'valentine';
+                else if (m === 3) t = 'holi';
+                else t = 'default';
+            }
+
+            const r = document.documentElement.style;
+            if(t === 'diwali') { r.setProperty('--primary', '#ea580c'); }
+            else if(t === 'christmas') { r.setProperty('--primary', '#15803d'); }
+            else if(t === 'holi') { r.setProperty('--primary', '#9333ea'); }
+            else if(t === 'valentine') { r.setProperty('--primary', '#e11d48'); }
+            else if(t === 'newyear') { r.setProperty('--primary', '#0f172a'); }
+            else { r.setProperty('--primary', '#D81B60'); }
+        }
 
         function renderHome() {
             document.getElementById('catBanners').innerHTML = appData.catBanners.map(b => {
@@ -216,7 +294,6 @@
             if(q) list = list.filter(p => p.name.toLowerCase().includes(q));
             if(currentCat!=='all') list = list.filter(p => p.cat === currentCat);
             
-            // Layout Rank Sort
             list.sort((a,b) => (a.rank||100) - (b.rank||100));
 
             document.getElementById('grid').innerHTML = list.map(p => `
@@ -246,7 +323,6 @@
             sel.innerHTML = '<option value="">Select Size</option>';
             for(let [s, q] of Object.entries(curProd.stock)) if(q > 0) sel.innerHTML += `<option value="${s}">Size ${s}</option>`;
 
-            // Similar
             const sims = appData.products.filter(p => p.cat === curProd.cat && p.id !== curProd.id).slice(0,5);
             document.getElementById('similarRow').innerHTML = sims.map(p => `<div class="sim-card" onclick="openProd(${p.id})"><img src="${p.img}"></div>`).join('');
 
