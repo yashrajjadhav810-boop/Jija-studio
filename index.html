@@ -73,6 +73,8 @@
         .qty-box { display: flex; align-items: center; gap: 10px; border: 1px solid #ddd; border-radius: 4px; padding: 2px; width: fit-content; margin-top: 5px;}
         .qty-btn { width: 25px; height: 25px; background: #eee; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; }
 
+        #loading { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:9999; display:flex; justify-content:center; align-items:center; font-weight:bold; color:#D81B60; }
+
         @media (min-width: 768px) {
             .pv-container { flex-direction: row; padding-top: 20px; }
             .pv-left { flex: 0.4; border-right: 1px solid #f0f0f0; position: sticky; top: 0; height: 100vh; justify-content: flex-start;}
@@ -85,17 +87,28 @@
 </head>
 <body>
 
-    <div id="loginModal" class="modal" style="display:flex;">
+    <div id="loading">Loading Shop...</div>
+
+    <div id="loginModal" class="modal">
         <div class="modal-box">
             <div style="text-align:center; margin-bottom:20px;"><img src="logo.jpg" class="logo-img" onerror="this.style.display='none'"></div>
             <h3 style="text-align:center;">Login</h3>
-            <input type="text" id="uName" class="form-input" placeholder="Name">
-            <input type="tel" id="uPhone" class="form-input" placeholder="Mobile">
-            <button class="full-btn" onclick="sendOTP()">Get OTP</button>
-            <div id="otpArea" style="display:none; margin-top:10px;">
-                <input type="number" id="otpIn" class="form-input" placeholder="OTP">
-                <button class="full-btn" style="background:green;" onclick="verifyOTP()">Verify</button>
+            <input type="text" id="uName" class="form-input" placeholder="Your Name">
+            
+            <div style="display:flex; align-items:center; gap:5px;">
+                <span style="font-weight:bold; color:#555;">+91</span>
+                <input type="tel" id="uPhone" class="form-input" placeholder="Mobile Number" style="margin-bottom:10px;">
             </div>
+            
+            <div id="recaptcha-container"></div>
+
+            <button id="sendOtpBtn" class="full-btn" onclick="sendRealOTP()">Send SMS OTP</button>
+            
+            <div id="otpArea" style="display:none; margin-top:10px;">
+                <input type="number" id="otpIn" class="form-input" placeholder="Enter 6-digit Code">
+                <button class="full-btn" style="background:green;" onclick="verifyRealOTP()">Verify & Login</button>
+            </div>
+            <p id="loginMsg" style="text-align:center; color:red; font-size:12px; margin-top:5px;"></p>
         </div>
     </div>
 
@@ -230,15 +243,145 @@
         <div class="copyright">© 2025 Jija Studio</div>
     </footer>
 
-    <script>
-        // --- ⚠️ PASTE DATA HERE FROM ADMIN PANEL ---
-        const HARDCODED_DATA = null; 
-        // ------------------------------------------
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
+        const firebaseConfig = {
+          apiKey: "AIzaSyBCGqrmKpymeBVmVMkGeHTCIarfWngSyFs",
+          authDomain: "jija-studio.firebaseapp.com",
+          projectId: "jija-studio",
+          storageBucket: "jija-studio.firebasestorage.app",
+          messagingSenderId: "335988954344",
+          appId: "1:335988954344:web:b0057fac8f4d5a7336655d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // --- AUTH: SETUP RECAPTCHA ---
+        window.setupRecaptcha = function() {
+            if(!window.recaptchaVerifier) {
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                    'size': 'invisible',
+                    'callback': (response) => {
+                        // reCAPTCHA solved, allow signInWithPhoneNumber.
+                        console.log("Recaptcha solved");
+                    }
+                });
+            }
+        }
+
+        // --- AUTH: SEND SMS ---
+        window.sendRealOTP = function() {
+            const name = document.getElementById('uName').value;
+            const phone = document.getElementById('uPhone').value;
+            const msg = document.getElementById('loginMsg');
+
+            if(!name || !phone) { msg.innerText = "Please enter Name and Phone"; return; }
+            if(phone.length !== 10) { msg.innerText = "Enter valid 10-digit number"; return; }
+
+            const phoneNumber = "+91" + phone;
+            
+            // Setup ReCaptcha
+            window.setupRecaptcha();
+            const appVerifier = window.recaptchaVerifier;
+
+            msg.innerText = "Sending SMS...";
+            document.getElementById('sendOtpBtn').disabled = true;
+
+            signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+                .then((confirmationResult) => {
+                    window.confirmationResult = confirmationResult;
+                    document.getElementById('otpArea').style.display = 'block';
+                    document.getElementById('sendOtpBtn').style.display = 'none';
+                    msg.innerText = "OTP Sent to " + phoneNumber;
+                }).catch((error) => {
+                    console.error(error);
+                    document.getElementById('sendOtpBtn').disabled = false;
+                    msg.innerText = "Error sending SMS: " + error.message;
+                    // Reset recaptcha
+                    if(window.recaptchaVerifier) window.recaptchaVerifier.clear();
+                });
+        }
+
+        // --- AUTH: VERIFY SMS ---
+        window.verifyRealOTP = function() {
+            const code = document.getElementById('otpIn').value;
+            const msg = document.getElementById('loginMsg');
+            
+            if(!code) return;
+
+            window.confirmationResult.confirm(code).then((result) => {
+                const user = result.user;
+                const userData = { 
+                    name: document.getElementById('uName').value, 
+                    phone: document.getElementById('uPhone').value,
+                    uid: user.uid 
+                };
+                localStorage.setItem('jijaUser', JSON.stringify(userData));
+                document.getElementById('loginModal').style.display = 'none';
+                window.location.reload(); // Refresh to clean up state
+            }).catch((error) => {
+                msg.innerText = "Invalid Code";
+                console.error(error);
+            });
+        }
+
+        // --- DATA LOAD ---
+        window.loadData = async function() {
+            try {
+                if(typeof HARDCODED_DATA !== 'undefined' && HARDCODED_DATA !== null) {
+                    // Use Hardcoded if present
+                    window.appData = HARDCODED_DATA;
+                } else {
+                    // Else use Firebase
+                    const snap = await getDoc(doc(db, "store", "inventory"));
+                    if (snap.exists()) {
+                        window.appData = snap.data();
+                    }
+                }
+
+                if(window.appData) {
+                    window.products = window.appData.products || [];
+                    window.subCategories = window.appData.subCategories || {};
+                    if(Array.isArray(window.subCategories)) {
+                        window.subCategories = { cloth: window.subCategories, kids: ["Boys", "Girls"], jewelry: [], toy: [] };
+                    }
+                }
+            } catch (e) {
+                console.error("Error loading data", e);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                window.initSlider();
+                window.applyFilters();
+            }
+        };
+
+        window.updateRemoteStock = async function(updatedData) {
+            try {
+                await setDoc(doc(db, "store", "inventory"), updatedData);
+                console.log("🔥 Stock Updated in Cloud");
+                return true;
+            } catch (e) {
+                alert("Error updating stock. Check internet.");
+                console.error(e);
+                return false;
+            }
+        };
+
+        // Start Load
+        window.loadData();
+    </script>
+
+    <script>
+        // MAIN APP LOGIC (Non-Module)
         const ADMIN = "918830903621";
         const SHIPPING_PER_ITEM = 40;
-        let products=[], cart=[], user=null, curProd=null, fakeOTP=0;
-        let subCategories = {}; let currentMainCat='all', currentSubCat='all';
+        let cart=[], user=null, curProd=null;
+        let currentMainCat='all', currentSubCat='all';
         let slideIndex=0; let slideInterval;
 
         const ADULT_SIZES = ["S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL", "6XL", "Free Size"];
@@ -246,45 +389,35 @@
         const BANGLE_SIZES = ["2-2", "2-4", "2-6", "2-8", "2-10"];
         const FOOTWEAR_SIZES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
-        // --- APPLY THEME FUNCTION ---
         function applyTheme() {
             const t = localStorage.getItem('jijaTheme') || 'default';
             const root = document.documentElement;
-
-            if (t === 'diwali') {
-                root.style.setProperty('--theme-color', '#ff6f00'); // Orange
-                root.style.setProperty('--bg-color', '#fff3e0');
-            } else if (t === 'christmas') {
-                root.style.setProperty('--theme-color', '#2e7d32'); // Green
-                root.style.setProperty('--bg-color', '#e8f5e9');
-            } else {
-                root.style.setProperty('--theme-color', '#D81B60'); // Pink (Default)
-                root.style.setProperty('--bg-color', '#fff0f5');
-            }
+            if (t === 'diwali') { root.style.setProperty('--theme-color', '#ff6f00'); root.style.setProperty('--bg-color', '#fff3e0'); } 
+            else if (t === 'christmas') { root.style.setProperty('--theme-color', '#2e7d32'); root.style.setProperty('--bg-color', '#e8f5e9'); } 
+            else { root.style.setProperty('--theme-color', '#D81B60'); root.style.setProperty('--bg-color', '#fff0f5'); }
         }
 
         window.onload = function() {
             applyTheme();
-
-            let data = null;
-            if(HARDCODED_DATA) {
-                data = HARDCODED_DATA;
-                if(!localStorage.getItem('jijaData')) localStorage.setItem('jijaData', JSON.stringify(data));
-            } else if(localStorage.getItem('jijaData')) {
-                data = JSON.parse(localStorage.getItem('jijaData'));
+            if(localStorage.getItem('jijaUser')) { 
+                user=JSON.parse(localStorage.getItem('jijaUser')); 
+                document.getElementById('loginModal').style.display='none'; 
+            } else {
+                document.getElementById('loginModal').style.display='flex';
             }
-
-            if(data) {
-                products = data.products || [];
-                subCategories = Array.isArray(data.subCategories) ? { cloth: data.subCategories, kids: ["Boys", "Girls"], jewelry: [], toy: [] } : (data.subCategories || {});
-            }
-            if(localStorage.getItem('jijaUser')) { user=JSON.parse(localStorage.getItem('jijaUser')); document.getElementById('loginModal').style.display='none'; }
-            initSlider(); applyFilters();
+            // Data loading handled by module script
         };
 
-        function initSlider() {
-            const bannerProds = products.filter(p => p.isBanner);
+        // Note: sendOTP and verifyOTP are now handled by window.sendRealOTP etc. in module script
+        function sendOTP() { window.sendRealOTP(); }
+        function verifyOTP() { window.verifyRealOTP(); }
+
+        window.initSlider = function() {
+            if(!window.products) return;
+            const bannerProds = window.products.filter(p => p.isBanner);
             const slider = document.getElementById('heroSlider');
+            slider.innerHTML = '<button class="slider-btn prev" onclick="moveSlide(-1)">&#10094;</button><button class="slider-btn next" onclick="moveSlide(1)">&#10095;</button>';
+            
             if(bannerProds.length > 0) {
                 slider.style.display = 'block';
                 bannerProds.forEach((p, idx) => {
@@ -294,19 +427,20 @@
                     slider.appendChild(div);
                 });
                 startSlideTimer();
-            }
+            } else { slider.style.display = 'none'; }
         }
-        function moveSlide(n) {
+
+        window.moveSlide = function(n) {
             const slides = document.getElementsByClassName("slide"); if(slides.length===0)return;
             slides[slideIndex].classList.remove("active"); slideIndex += n;
             if(slideIndex >= slides.length) slideIndex = 0; if(slideIndex < 0) slideIndex = slides.length - 1;
             slides[slideIndex].classList.add("active"); startSlideTimer();
         }
-        function startSlideTimer() { clearInterval(slideInterval); slideInterval = setInterval(() => moveSlide(1), 10000); }
+        function startSlideTimer() { clearInterval(slideInterval); slideInterval = setInterval(() => window.moveSlide(1), 10000); }
 
-        function renderGrid(list) {
+        window.renderGrid = function(list) {
             const g = document.getElementById('grid'); g.innerHTML="";
-            if(list.length === 0) { g.innerHTML = "<p style='padding:20px; color:#666;'>No items found.</p>"; return; }
+            if(!list || list.length === 0) { g.innerHTML = "<p style='padding:20px; color:#666;'>No items found.</p>"; return; }
             list.forEach(p => {
                 const mrp = p.mrp || Math.floor(p.price * 1.3);
                 const off = Math.floor(((mrp - p.price)/mrp)*100);
@@ -317,20 +451,24 @@
             });
         }
 
-        function setCat(cat) { 
+        window.setCat = function(cat) { 
             currentMainCat = cat; currentSubCat = 'all';
             document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active');
             updateSizeFilterOptions(cat); updateSubCatBar(cat); applyFilters();
         }
-        function filterSub(sub, btn) {
+        
+        window.filterSub = function(sub, btn) {
             currentSubCat = sub; document.querySelectorAll('.sc-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); applyFilters();
         }
+
         function updateSubCatBar(cat) {
-            const bar = document.getElementById('subCatBar'); const subs = subCategories[cat];
+            const bar = document.getElementById('subCatBar'); 
+            const subs = window.subCategories ? window.subCategories[cat] : [];
             if(subs && subs.length > 0) {
                 bar.style.display = 'flex'; bar.innerHTML = `<button class="sc-btn active" onclick="filterSub('all', this)">All</button>` + subs.map(s => `<button class="sc-btn" onclick="filterSub('${s}', this)">${s}</button>`).join('');
             } else bar.style.display = 'none';
         }
+
         function updateSizeFilterOptions(cat) {
             const sizeSel = document.getElementById('sizeFilter'); sizeSel.innerHTML = '<option value="all">All Sizes</option>';
             if(cat === 'cloth') { sizeSel.style.display = 'block'; ADULT_SIZES.forEach(s => sizeSel.innerHTML += `<option value="${s}">${s}</option>`); }
@@ -339,10 +477,10 @@
             else if (cat === 'footwear') { sizeSel.style.display = 'block'; FOOTWEAR_SIZES.forEach(s => sizeSel.innerHTML += `<option value="${s}">${s}</option>`); }
             else sizeSel.style.display = 'none';
         }
-        function applyFilters() {
-            let filtered = products;
 
-            // 1. Search Query
+        window.applyFilters = function() {
+            let filtered = window.products || [];
+            
             const q = document.getElementById('searchBox')?.value.toLowerCase() || "";
             if (q) {
                 filtered = filtered.filter(p =>
@@ -352,11 +490,9 @@
                 );
             }
 
-            // 2. Categories
             if(currentMainCat !== 'all') filtered = filtered.filter(p => p.cat === currentMainCat);
             if(currentSubCat !== 'all') filtered = filtered.filter(p => p.subCat === currentSubCat);
             
-            // 3. Size
             const sizeVal = document.getElementById('sizeFilter').value;
             if(document.getElementById('sizeFilter').style.display !== 'none' && sizeVal !== 'all') {
                 filtered = filtered.filter(p => {
@@ -365,8 +501,6 @@
                     return hasStock;
                 });
             }
-
-            // 4. Sort
             const sortVal = document.getElementById('sortSelect').value;
             if(sortVal === 'low') filtered.sort((a,b) => a.price - b.price);
             else if (sortVal === 'high') filtered.sort((a,b) => b.price - a.price);
@@ -374,8 +508,8 @@
             renderGrid(filtered);
         }
 
-        function openProd(id) {
-            curProd = products.find(p=>p.id===id);
+        window.openProd = function(id) {
+            curProd = window.products.find(p=>p.id===id);
             document.getElementById('pvImg').src = curProd.img;
             document.getElementById('pvTitle').innerText = curProd.name;
             document.getElementById('pvPrice').innerText = "₹"+curProd.price;
@@ -384,13 +518,17 @@
             document.getElementById('pvMrp').innerText = "₹"+mrp;
             document.getElementById('pvOff').innerText = off+"% OFF";
             document.getElementById('pvDesc').innerText = curProd.desc||"";
+            
             const thumbsDiv = document.getElementById('pvThumbs');
             thumbsDiv.innerHTML = `<img src="${curProd.img}" class="thumb active" onclick="swapImg('${curProd.img}', this)">`;
             if(curProd.img2) thumbsDiv.innerHTML += `<img src="${curProd.img2}" class="thumb" onclick="swapImg('${curProd.img2}', this)">`;
             if(curProd.img3) thumbsDiv.innerHTML += `<img src="${curProd.img3}" class="thumb" onclick="swapImg('${curProd.img3}', this)">`;
+
             const vBtn = document.getElementById('pvVideoBtn');
             if(curProd.video) { vBtn.style.display = 'flex'; vBtn.onclick = function() { window.open(curProd.video, '_blank'); }; } else { vBtn.style.display = 'none'; }
+
             const sel = document.getElementById('pvSize'); sel.innerHTML='<option value="">Select</option>';
+            
             if(curProd.cat==='cloth' || curProd.cat==='kids' || curProd.cat==='footwear' || (curProd.cat==='jewelry' && curProd.subCat && curProd.subCat.toLowerCase().includes('bangle'))) {
                 sel.parentElement.style.display='block';
                 let hasFreeSize = curProd.stock["Free Size"] > 0;
@@ -410,8 +548,9 @@
             checkStock(); document.getElementById('productView').style.display='block';
         }
 
-        function swapImg(src, el) { document.getElementById('pvImg').src = src; document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
-        function checkStock() {
+        window.swapImg = function(src, el) { document.getElementById('pvImg').src = src; document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
+        
+        window.checkStock = function() {
             const sel=document.getElementById('pvSize'); let q=0;
             if(sel.parentElement.style.display !== 'none') {
                 if(sel.value==="") { toggleBtns(true); return; } q=parseInt(sel.options[sel.selectedIndex].getAttribute('data-q'));
@@ -420,7 +559,7 @@
         }
         function toggleBtns(dis) { const b1=document.getElementById('btnAddToCart'), b2=document.getElementById('btnBuyNow'); if(dis) { b1.classList.add('btn-disabled'); b2.classList.add('btn-disabled'); } else { b1.classList.remove('btn-disabled'); b2.classList.remove('btn-disabled'); } }
 
-        function addToCart() {
+        window.addToCart = function() {
             if(document.getElementById('btnAddToCart').classList.contains('btn-disabled')) return;
             let sz=null; let map=null;
             const sel=document.getElementById('pvSize');
@@ -438,10 +577,10 @@
             if(ex) ex.qty++; else cart.push({...curProd, qty:1, size:sz, mapStock: map});
             updateCart(); alert("Added!"); document.getElementById('productView').style.display='none';
         }
-        function buyNow() { if(!document.getElementById('btnAddToCart').classList.contains('btn-disabled')){ addToCart(); openCart(); } }
+        window.buyNow = function() { if(!document.getElementById('btnAddToCart').classList.contains('btn-disabled')){ addToCart(); openCart(); } }
         
         function updateCart() { document.getElementById('cCount').innerText=cart.reduce((a,b)=>a+b.qty,0); }
-        function openCart() {
+        window.openCart = function() {
             document.getElementById('cartModal').style.display='flex'; const l=document.getElementById('cartList'); l.innerHTML=""; let t=0; let totalItems = 0;
             cart.forEach((i,idx)=>{ 
                 t+=i.price*i.qty; totalItems += i.qty;
@@ -451,12 +590,12 @@
             document.getElementById('cartSub').innerText=t; document.getElementById('cartDel').innerText="+ ₹" + deliveryCharge; document.getElementById('cartTotal').innerText=t + deliveryCharge;
         }
 
-        function changeQty(idx, change) {
+        window.changeQty = function(idx, change) {
             let item = cart[idx]; let newQty = item.qty + change;
             if(newQty < 1) { if(confirm("Remove item?")) cart.splice(idx, 1); } 
             else {
                 if(change > 0) {
-                    let available = 0; let liveProd = products.find(p => p.id === item.id);
+                    let available = 0; let liveProd = window.products.find(p => p.id === item.id);
                     if(liveProd) {
                         if(item.mapStock) available = liveProd.stock[item.mapStock];
                         else if(item.size && liveProd.stock[item.size] !== undefined) available = liveProd.stock[item.size];
@@ -469,15 +608,19 @@
             openCart(); updateCart();
         }
 
-        function openCheckout() { if(!cart.length) return alert("Cart empty"); document.getElementById('cartModal').style.display='none'; document.getElementById('checkoutModal').style.display='flex'; }
+        window.openCheckout = function() { if(!cart.length) return alert("Cart empty"); document.getElementById('cartModal').style.display='none'; document.getElementById('checkoutModal').style.display='flex'; }
         
-        function placeOrder() {
+        window.placeOrder = async function() {
             const addrIds=['coAddr','coArea','coCity','coState','coPin']; for(let i of addrIds) if(!document.getElementById(i).value) return alert("Fill Address");
-            let storedData = JSON.parse(localStorage.getItem('jijaData')) || { products: [] };
-            if(HARDCODED_DATA) storedData = HARDCODED_DATA;
+            
+            document.getElementById('loading').style.display = 'flex'; // Show loading
+            
+            // 1. DEDUCT STOCK FROM CLOUD
+            let updatedData = window.appData; // Current state
             let totalItems = 0;
+            
             cart.forEach(c => {
-                let dbProd = storedData.products.find(p => p.id === c.id);
+                let dbProd = updatedData.products.find(p => p.id === c.id);
                 if(dbProd) {
                     let key = c.mapStock || c.size || "General";
                     if(!c.mapStock && c.size && dbProd.stock[c.size] === undefined && dbProd.stock["Free Size"]) key = "Free Size";
@@ -485,7 +628,15 @@
                 }
                 totalItems += c.qty;
             });
-            localStorage.setItem('jijaData', JSON.stringify(storedData));
+            
+            // WRITE TO FIREBASE
+            const success = await window.updateRemoteStock(updatedData);
+            if(!success) {
+                document.getElementById('loading').style.display = 'none';
+                return;
+            }
+            
+            // 2. SEND MESSAGE
             let msg=`*NEW ORDER*\nUser: ${user.name} (${user.phone})\n\nAddress:\n`; 
             addrIds.forEach(id => msg+=document.getElementById(id).value+", ");
             msg+="\n\nItems:\n"; 
@@ -497,13 +648,11 @@
             msg+=`\nDelivery (${totalItems} items x ₹40): ₹${deliveryCost}`;
             msg+=`\n*TOTAL: ₹${grandTotal}*\n`;
             msg+=`Payment Mode: Pay on WhatsApp`;
+            
             cart = []; updateCart();
             window.open(`https://wa.me/${ADMIN}?text=${encodeURIComponent(msg)}`);
             location.reload(); 
         }
-        
-        function sendOTP() { if(document.getElementById('uPhone').value) { fakeOTP=Math.floor(1000+Math.random()*9000); alert("OTP: "+fakeOTP); document.getElementById('otpArea').style.display='block'; } }
-        function verifyOTP() { if(parseInt(document.getElementById('otpIn').value)===fakeOTP) { user={name:document.getElementById('uName').value, phone:document.getElementById('uPhone').value}; localStorage.setItem('jijaUser',JSON.stringify(user)); document.getElementById('loginModal').style.display='none'; } else alert("Wrong"); }
     </script>
 </body>
 </html>
