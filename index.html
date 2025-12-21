@@ -10,93 +10,66 @@
         :root { --primary: #D81B60; --dark: #1e293b; --light: #f8fafc; --white: #ffffff; --green: #10b981; }
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); padding-bottom: 80px; }
         
+        /* HEADER */
         header { background: var(--primary); padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .cart-btn { background: white; color: var(--primary); padding: 8px 15px; border-radius: 20px; font-weight: 600; border: none; cursor: pointer; }
-        .nav-link { color: white; margin-right: 10px; text-decoration: none; font-size: 0.9rem; cursor: pointer; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
+        .logo img { height: 35px; border-radius: 50%; border: 2px solid white; }
+        .icon-btn { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; position: relative; margin-left: 10px; }
+        .badge { position: absolute; top: -5px; right: -5px; background: white; color: var(--primary); font-size: 0.7rem; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        .search-wrap { padding: 10px 15px; background: white; position: sticky; top: 60px; z-index: 90; }
-        .search-input { width: 100%; padding: 12px 20px; border: 1px solid #e2e8f0; border-radius: 50px; background: #f1f5f9; outline: none; box-sizing: border-box; }
-
-        .tabs { display: flex; gap: 10px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; background: white; margin-bottom: 5px; }
-        .tab-btn { padding: 8px 18px; border: 1px solid #e2e8f0; background: white; border-radius: 30px; font-size: 0.9rem; color: #64748b; white-space: nowrap; cursor: pointer; transition: 0.2s; font-weight: 500; }
-        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        /* SUB-CATEGORY CHIPS */
-        .sub-cat-row { display: flex; gap: 8px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; background: #f1f5f9; display: none; }
-        .sub-chip { background: white; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; color: #475569; white-space: nowrap; cursor: pointer; }
-        .sub-chip.active { background: #334155; color: white; border-color: #334155; }
-
-        /* FILTERS */
-        .filter-options { display: flex; gap: 10px; padding: 10px 15px; overflow-x: auto; }
-        .filter-select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; background: white; font-size: 0.85rem; outline: none; color: #475569; }
-
-        .hero-slider { height: 240px; margin: 10px 15px; border-radius: 12px; overflow: hidden; position: relative; display: none; background: #ddd; }
-        .slide { position: absolute; inset: 0; opacity: 0; transition: 0.5s; display: flex; align-items: center; justify-content: center; }
-        .slide.active { opacity: 1; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; }
-
-        .cat-grid { display: flex; gap: 10px; padding: 0 15px 15px; overflow-x: auto; scrollbar-width: none; }
-        .cat-card { min-width: 110px; height: 110px; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .cat-media { width: 100%; height: 100%; object-fit: cover; }
-        .cat-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 15px; max-width: 1200px; margin: 0 auto; }
-        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; cursor: pointer; }
-        .badge-img { position: absolute; top: 10px; left: 10px; width: 40px; height: auto; z-index: 10; }
-        .card img.main-img { width: 100%; height: 200px; object-fit: cover; }
+        /* PRODUCT CARD */
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; cursor: pointer; transition: 0.3s; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .card-img-wrap { position: relative; }
+        .card img { width: 100%; height: 220px; object-fit: cover; }
+        .wish-icon { position: absolute; top: 10px; right: 10px; background: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 5; transition: 0.2s; }
+        .wish-icon.active { color: var(--primary); }
+        
         .info { padding: 10px; }
-        .title { font-size: 0.9rem; margin: 0 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .price { font-weight: 700; font-size: 1.1rem; }
+
+        /* PROFESSIONAL ADDRESS FORM */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .form-full { width: 100%; margin-bottom: 12px; }
+        .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 4px; display: block; }
+        .form-input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.9rem; box-sizing: border-box; }
+        .form-input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(216,27,96,0.1); }
+        .form-input[disabled] { background: #e2e8f0; color: #64748b; cursor: not-allowed; }
 
         /* MODALS */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-box { background: white; width: 90%; max-width: 500px; height: auto; max-height: 90vh; border-radius: 15px; overflow-y: auto; position: relative; padding: 20px; }
+        .modal-box { background: white; width: 90%; max-width: 500px; max-height: 90vh; border-radius: 15px; overflow-y: auto; position: relative; padding: 20px; }
         
-        /* IMAGE GALLERY IN MODAL */
-        .pv-gallery { position: relative; width: 100%; height: 350px; background: #f9f9f9; border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
-        .pv-main-img { width: 100%; height: 100%; object-fit: contain; }
-        .pv-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.3); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; z-index: 10; }
-        .pv-arrow.left { left: 10px; }
-        .pv-arrow.right { right: 10px; }
+        .btn-full { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; font-weight: 600; font-size: 1rem; cursor: pointer; border-radius: 8px; margin-top: 10px; }
         
-        .thumb-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; }
-        .thumb { width: 50px; height: 50px; border-radius: 6px; border: 2px solid transparent; object-fit: cover; cursor: pointer; }
-        .thumb.active { border-color: var(--primary); }
-
-        .btn-full { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; font-weight: 600; font-size: 1rem; cursor: pointer; border-radius: 8px; margin-top: 10px; }
-        
-        /* SIMILAR & REVIEWS */
-        .similar-row { display: flex; gap: 10px; overflow-x: auto; margin-top: 20px; }
-        .sim-card { min-width: 120px; }
-        .sim-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
-        
-        .review-box { margin-top: 20px; padding-top: 10px; border-top: 1px solid #eee; }
-        .review-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.85rem; }
-
-        /* THEME PARTICLES */
-        .theme-particle { position: fixed; top: -10%; user-select: none; pointer-events: none; z-index: 10; animation: fall linear forwards; opacity: 0.8; }
+        /* ANIMATION PARTICLES */
+        .theme-particle { position: fixed; top: -10%; user-select: none; pointer-events: none; z-index: 5000; animation: fall linear forwards; opacity: 0.9; }
         @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
-        
-        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: bold; display: none; }
+
+        /* GRID & TABS CSS from previous ... */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 15px; }
+        .tabs { display: flex; gap: 10px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; background: white; }
+        .tab-btn { padding: 8px 18px; border: 1px solid #eee; background: white; border-radius: 30px; font-size: 0.9rem; white-space: nowrap; cursor: pointer; }
+        .tab-btn.active { background: var(--primary); color: white; }
     </style>
 </head>
 <body>
 
-    <div id="loader">Processing...</div>
-
     <header>
-        <div style="display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.2rem;">
-            <img src="logo.jpg" style="height:35px; border-radius:50%;" onerror="this.style.display='none'"> Jija Studio
+        <div class="logo">
+            <img src="logo.jpg" onerror="this.src='https://via.placeholder.com/50?text=Logo'">
+            Jija Studio
         </div>
         <div>
-            <span class="nav-link" onclick="openMyOrders()">📦 My Orders</span>
-            <button class="cart-btn" onclick="openCart()">Cart <span id="cCount">0</span></button>
+            <button class="icon-btn" onclick="openWishlist()">
+                <i class="ri-heart-3-line"></i> <span class="badge" id="wCount">0</span>
+            </button>
+            <button class="icon-btn" onclick="openCart()">
+                <i class="ri-shopping-cart-line"></i> <span class="badge" id="cCount">0</span>
+            </button>
         </div>
     </header>
-
-    <div class="search-wrap">
-        <input class="search-input" id="searchBox" placeholder="🔍 Search..." oninput="applyFilters()">
-    </div>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="setCat('all', this)">All</button>
@@ -104,93 +77,73 @@
         <button class="tab-btn" onclick="setCat('kids', this)">Kids</button>
         <button class="tab-btn" onclick="setCat('footwear', this)">Footwear</button>
         <button class="tab-btn" onclick="setCat('jewelry', this)">Jewelry</button>
-        <button class="tab-btn" onclick="setCat('toy', this)">Toys</button>
     </div>
 
-    <div id="subCatRow" class="sub-cat-row"></div>
-
-    <div class="filter-options">
-        <select id="budgetFilter" class="filter-select" onchange="applyFilters()">
-            <option value="all">💰 Budget</option>
-            <option value="500">Under ₹500</option>
-            <option value="1000">₹500 - ₹1000</option>
-            <option value="high">Above ₹1000</option>
-        </select>
-        <select id="sortSelect" class="filter-select" onchange="applyFilters()">
-            <option value="new">🌟 Newest</option>
-            <option value="low">Price: Low to High</option>
-            <option value="high">Price: High to Low</option>
-        </select>
-        <select id="sizeFilter" class="filter-select" style="display:none;" onchange="applyFilters()">
-            <option value="all">📏 All Sizes</option>
-        </select>
-    </div>
-
-    <div id="heroSlider" class="hero-slider"></div>
-    <div class="cat-grid" id="catBanners"></div>
     <div class="grid" id="grid"></div>
 
-    <div id="productView" class="modal">
-        <div class="modal-box" style="height:90vh;">
-            <div style="position:absolute; top:15px; right:15px; background:rgba(255,255,255,0.8); border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:20;" onclick="document.getElementById('productView').style.display='none'">&times;</div>
-            
-            <div class="pv-gallery">
-                <div class="pv-arrow left" onclick="changeImg(-1)">&#10094;</div>
-                <img id="pvImg" class="pv-main-img">
-                <div class="pv-arrow right" onclick="changeImg(1)">&#10095;</div>
-            </div>
-            <div class="thumb-row" id="pvThumbs"></div>
-
-            <div id="pvVideoBox" style="display:none; padding:10px;"><iframe id="pvVideo" width="100%" height="200" frameborder="0"></iframe></div>
-            
-            <div style="padding:10px;">
-                <h2 id="pvTitle" style="margin:0 0 5px;"></h2>
-                <div style="font-size:1.2rem; font-weight:700; color:var(--primary);"><span id="pvPrice"></span></div>
-                <select id="pvSize" style="width:100%; padding:10px; margin-top:10px; border:1px solid #ddd; border-radius:6px;"></select>
-                <div id="pvStock" style="font-size:0.85rem; margin-top:5px; font-weight:600;"></div>
-                <p id="pvDesc" style="color:#666; font-size:0.9rem; line-height:1.5;"></p>
-            </div>
-
-            <div style="font-weight:600; margin:10px 10px 0;">You might also like</div>
-            <div class="similar-row" id="similarRow"></div>
-
-            <div class="review-box">
-                <div style="font-weight:600; margin-bottom:10px;">Reviews</div>
-                <div id="reviewList"></div>
-                <div style="display:flex; gap:5px; margin-top:10px;">
-                    <input id="revText" placeholder="Write review..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:4px;">
-                    <button onclick="addReview()" style="background:#333; color:white; border:none; border-radius:4px; padding:0 10px;">Post</button>
-                </div>
-            </div>
-
-            <button class="btn-full" onclick="addToCart()">ADD TO CART</button>
-        </div>
-    </div>
-
-    <div id="cartModal" class="modal">
+    <div id="wishModal" class="modal">
         <div class="modal-box">
-            <h3>Your Cart</h3>
-            <div id="cartList"></div>
-            <div style="margin-top:15px; font-weight:bold; text-align:right;">Total: ₹<span id="cartTotal">0</span></div>
-            <button class="btn-full" onclick="openCheckout()">PROCEED TO CHECKOUT</button>
-            <button onclick="document.getElementById('cartModal').style.display='none'" style="width:100%; padding:10px; border:none; background:none; margin-top:5px;">Close</button>
+            <h3>My Wishlist ❤️</h3>
+            <div id="wishListContainer"></div>
+            <button onclick="document.getElementById('wishModal').style.display='none'" class="btn-full" style="background:#333;">Close</button>
         </div>
     </div>
 
     <div id="checkoutModal" class="modal">
         <div class="modal-box">
-            <h3>Shipping Details</h3>
-            <input id="coAddr" placeholder="House No, Building" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:6px;">
-            <input id="coCity" placeholder="City, Pincode" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
-            <button class="btn-full" onclick="placeOrder()">PLACE ORDER ON WHATSAPP</button>
-        </div>
-    </div>
+            <h3 style="margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">Shipping Address</h3>
+            
+            <div class="form-grid">
+                <div>
+                    <label class="form-label">Country</label>
+                    <input class="form-input" value="India 🇮🇳" disabled>
+                </div>
+                <div>
+                    <label class="form-label">State</label>
+                    <select class="form-input" id="addrState">
+                        <option value="">Select State</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        </select>
+                </div>
+            </div>
 
-    <div id="ordersModal" class="modal">
-        <div class="modal-box">
-            <h3>My Orders</h3>
-            <div id="myOrdersList"></div>
-            <button onclick="document.getElementById('ordersModal').style.display='none'" class="btn-full" style="background:#333;">Close</button>
+            <div class="form-grid">
+                <div>
+                    <label class="form-label">District</label>
+                    <input class="form-input" id="addrDist" placeholder="District Name">
+                </div>
+                <div>
+                    <label class="form-label">Taluka</label>
+                    <input class="form-input" id="addrTaluka" placeholder="Taluka Name">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div>
+                    <label class="form-label">Pincode</label>
+                    <input class="form-input" id="addrPin" type="number" placeholder="415xxx">
+                </div>
+                <div>
+                    <label class="form-label">City / Village</label>
+                    <input class="form-input" id="addrCity" placeholder="Village Name">
+                </div>
+            </div>
+
+            <div class="form-full">
+                <label class="form-label">Flat / House / Landmark</label>
+                <textarea class="form-input" id="addrLocal" rows="2" placeholder="Near Temple, House No 12..."></textarea>
+            </div>
+
+            <div style="margin-top:15px; background:#f0fdf4; padding:10px; border-radius:6px; border:1px dashed var(--green); font-size:0.85rem; color:var(--green);">
+                <i class="ri-whatsapp-line"></i> Order details will be sent to WhatsApp.
+            </div>
+
+            <button class="btn-full" onclick="placeOrder()">PLACE ORDER ON WHATSAPP</button>
+            <button onclick="document.getElementById('checkoutModal').style.display='none'" style="width:100%; padding:10px; background:none; border:none; margin-top:5px; cursor:pointer;">Cancel</button>
         </div>
     </div>
 
@@ -199,322 +152,153 @@
         const ORDERS_URL = "https://jija-studio-default-rtdb.firebaseio.com/orders.json";
         const ADMIN_PHONE = "918830903621";
         
-        let appData = { products: [], reviews: [], catBanners: [], subCategories: {} };
-        let cart = [], curProd = null;
-        let currentImgIdx = 0; // For Gallery
-        let currentImages = []; // Stores current product images
-        let user = JSON.parse(localStorage.getItem('jijaUser')) || { name: "Guest", phone: "0000000000" };
-        let currentCat = 'all', currentSub = 'all';
-
-        const SIZES = {
-            cloth: ["S", "M", "L", "XL", "XXL", "3XL", "4XL", "Free Size"],
-            kids: ["0-1Y", "1-2Y", "2-3Y", "3-4Y", "4-5Y", "5-6Y", "6-7Y", "7-8Y", "8-9Y", "9-10Y", "11-12Y", "13-14Y"],
-            footwear: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-            jewelry: ["2-2", "2-4", "2-6", "2-8", "2-10", "Free Size"]
-        };
+        let appData = { products: [], settings: { theme: 'default' } };
+        let cart = [];
+        let wishlist = JSON.parse(localStorage.getItem('jijaWish')) || [];
+        let user = JSON.parse(localStorage.getItem('jijaUser')) || { name: "Guest" };
 
         window.onload = async () => {
-            applyTheme(); 
-            startThemeAnimations(); 
             const r = await fetch(DB_URL);
             const d = await r.json();
             if(d) {
                 appData = d;
                 if(!appData.products) appData.products=[];
-                if(!appData.reviews) appData.reviews=[];
-                if(!appData.catBanners) appData.catBanners=[];
-                if (Array.isArray(appData.subCategories)) {
-                    appData.subCategories = { cloth: appData.subCategories, kids: ["Boys"], footwear: ["Shoes"], jewelry: ["Necklace"], toy: ["Cars"] };
-                }
+                if(!appData.settings) appData.settings={theme:'default'};
+                
+                applyTheme(appData.settings.theme); // Apply theme from Admin
                 renderHome();
-                initSlider();
+                updateWishIcon();
             }
         };
 
-        function startThemeAnimations() {
-            let t = localStorage.getItem('jijaTheme') || 'default';
-            if(t==='auto') t = 'default';
+        // --- ANIMATION ENGINE ---
+        function applyTheme(t) {
+            const r = document.documentElement.style;
             let symbols = [];
-            if(t === 'christmas') symbols = ['❄️', '⛄', '🎄'];
-            else if(t === 'diwali') symbols = ['🪔', '✨', '🎆'];
-            else if(t === 'holi') symbols = ['🟣', '🟡', '🟢', '🔴'];
-            else if(t === 'valentine') symbols = ['❤️', '💖', '💌'];
-            else if(t === 'newyear') symbols = ['🎉', '🥂', '🎊'];
-            else return; 
 
+            if(t === 'diwali') { r.setProperty('--primary', '#ea580c'); symbols = ['🪔','✨','🎆']; }
+            else if(t === 'christmas') { r.setProperty('--primary', '#15803d'); symbols = ['❄️','🎄','⛄']; }
+            else if(t === 'holi') { r.setProperty('--primary', '#9333ea'); symbols = ['🟣','🟡','🔴']; }
+            else if(t === 'newyear') { r.setProperty('--primary', '#0f172a'); symbols = ['🎉','🥂']; }
+            else { r.setProperty('--primary', '#D81B60'); }
+
+            if(symbols.length > 0) startRain(symbols);
+        }
+
+        function startRain(symbols) {
             setInterval(() => {
                 const p = document.createElement('div');
                 p.classList.add('theme-particle');
-                p.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-                p.style.left = Math.random() * 100 + 'vw';
-                p.style.fontSize = (Math.random() * 20 + 15) + 'px';
-                p.style.animationDuration = (Math.random() * 3 + 4) + 's'; 
+                p.innerText = symbols[Math.floor(Math.random()*symbols.length)];
+                p.style.left = Math.random()*100 + 'vw';
+                p.style.fontSize = (Math.random()*20+15)+'px';
+                p.style.animationDuration = (Math.random()*3+4)+'s';
                 document.body.appendChild(p);
-                setTimeout(() => p.remove(), 7000);
-            }, 800); 
-        }
-
-        function applyTheme() {
-            let t = localStorage.getItem('jijaTheme') || 'default';
-            const r = document.documentElement.style;
-            if(t === 'diwali') { r.setProperty('--primary', '#ea580c'); }
-            else if(t === 'christmas') { r.setProperty('--primary', '#15803d'); }
-            else if(t === 'holi') { r.setProperty('--primary', '#9333ea'); }
-            else if(t === 'valentine') { r.setProperty('--primary', '#e11d48'); }
-            else if(t === 'newyear') { r.setProperty('--primary', '#0f172a'); }
-            else { r.setProperty('--primary', '#D81B60'); }
+                setTimeout(()=>p.remove(), 7000);
+            }, 1000);
         }
 
         function renderHome() {
-            document.getElementById('catBanners').innerHTML = appData.catBanners.map(b => {
-                const media = b.type === 'vid' ? `<video src="${b.media}" class="cat-media" autoplay muted loop playsinline></video>` : `<img src="${b.media}" class="cat-media">`;
-                return `<div class="cat-card" onclick="alert('Filtered: ${b.sub}')">${media}<div class="cat-overlay">${b.sub}</div></div>`;
+            document.getElementById('grid').innerHTML = appData.products.map(p => {
+                const isWish = wishlist.includes(p.id) ? 'active' : '';
+                return `
+                <div class="card">
+                    <div class="card-img-wrap">
+                        <img src="${p.img}">
+                        <div class="wish-icon ${isWish}" onclick="toggleWish(${p.id}, this)"><i class="ri-heart-fill"></i></div>
+                    </div>
+                    <div class="info">
+                        <div class="title">${p.name}</div>
+                        <div class="price">₹${p.price}</div>
+                        <button onclick="addToCart(${p.id})" style="width:100%; margin-top:5px; padding:5px; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add to Cart</button>
+                    </div>
+                </div>`;
             }).join('');
-            applyFilters();
         }
 
-        function initSlider() {
-            const slider = document.getElementById('heroSlider');
-            const banners = appData.products.filter(p => p.isBanner);
-            if(banners.length) {
-                slider.style.display = 'block';
-                slider.innerHTML = banners.map((p,i) => `<div class="slide ${i===0?'active':''}" style="opacity:${i===0?1:0}"><img src="${p.img}" onclick="openProd(${p.id})"></div>`).join('');
-                let idx=0; setInterval(() => { const s=slider.querySelectorAll('.slide'); s[idx].style.opacity=0; idx=(idx+1)%s.length; s[idx].style.opacity=1; }, 4000);
-            } else slider.style.display='none';
-        }
-
-        function applyFilters() {
-            let list = appData.products || [];
-            
-            const q = document.getElementById('searchBox').value.toLowerCase();
-            if(q) list = list.filter(p => p.name.toLowerCase().includes(q));
-            
-            if(currentCat!=='all') list = list.filter(p => p.cat === currentCat);
-            if(currentSub!=='all') list = list.filter(p => p.subCats && p.subCats.includes(currentSub));
-
-            const budget = document.getElementById('budgetFilter').value;
-            if(budget !== 'all') {
-                list = list.filter(p => {
-                    const price = parseInt(p.price);
-                    if(budget === '500') return price < 500;
-                    if(budget === '1000') return price >= 500 && price <= 1000;
-                    if(budget === 'high') return price > 1000;
-                    return true;
-                });
-            }
-
-            const sizeVal = document.getElementById('sizeFilter').value;
-            if(sizeVal !== 'all' && document.getElementById('sizeFilter').style.display !== 'none') {
-                list = list.filter(p => p.stock && p.stock[sizeVal] > 0);
-            }
-
-            const sort = document.getElementById('sortSelect').value;
-            if(sort === 'low') list.sort((a,b) => a.price - b.price);
-            else if(sort === 'high') list.sort((a,b) => b.price - a.price);
-            else list.sort((a,b) => (a.rank||100) - (b.rank||100));
-
-            document.getElementById('grid').innerHTML = list.map(p => `
-                <div class="card" onclick="openProd(${p.id})">
-                    ${p.badge ? `<img src="${p.badge}" class="badge-img">` : ''}
-                    <img src="${p.img}" class="main-img">
-                    <div class="info"><div class="title">${p.name}</div><div class="price">₹${p.price}</div></div>
-                </div>
-            `).join('');
-        }
-
-        function setCat(cat, btn) {
-            currentCat = cat;
-            currentSub = 'all';
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            const subRow = document.getElementById('subCatRow');
-            const subs = appData.subCategories[cat] || [];
-            
-            if(subs.length > 0) {
-                subRow.style.display = 'flex';
-                subRow.innerHTML = `<div class="sub-chip active" onclick="filterSub('all', this)">All</div>` + 
-                    subs.map(s => `<div class="sub-chip" onclick="filterSub('${s}', this)">${s}</div>`).join('');
+        // --- WISHLIST LOGIC ---
+        function toggleWish(id, el) {
+            if(wishlist.includes(id)) {
+                wishlist = wishlist.filter(i => i !== id);
+                el.classList.remove('active');
             } else {
-                subRow.style.display = 'none';
+                wishlist.push(id);
+                el.classList.add('active');
             }
-
-            const sf = document.getElementById('sizeFilter');
-            const sizes = SIZES[cat];
-            if(sizes) {
-                sf.style.display = 'block';
-                sf.innerHTML = '<option value="all">📏 All Sizes</option>' + sizes.map(s => `<option value="${s}">${s}</option>`).join('');
-            } else sf.style.display = 'none';
-
-            applyFilters();
+            localStorage.setItem('jijaWish', JSON.stringify(wishlist));
+            updateWishIcon();
         }
 
-        function filterSub(sub, btn) {
-            currentSub = sub;
-            document.querySelectorAll('.sub-chip').forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
-            applyFilters();
+        function updateWishIcon() {
+            document.getElementById('wCount').innerText = wishlist.length;
         }
 
-        // --- NEW: GALLERY LOGIC ---
-        function openProd(id) {
-            curProd = appData.products.find(p => p.id === id);
-            
-            // Gather all images
-            currentImages = [curProd.img];
-            if(curProd.img2) currentImages.push(curProd.img2);
-            if(curProd.img3) currentImages.push(curProd.img3);
-            currentImgIdx = 0;
-
-            updateGallery();
-
-            document.getElementById('pvTitle').innerText = curProd.name;
-            document.getElementById('pvPrice').innerText = '₹' + curProd.price;
-            document.getElementById('pvDesc').innerText = curProd.desc || "";
-            
-            const sel = document.getElementById('pvSize');
-            sel.innerHTML = '<option value="">Select Size</option>';
-            for(let [s, q] of Object.entries(curProd.stock)) if(q > 0) sel.innerHTML += `<option value="${s}">Size ${s}</option>`;
-
-            const sims = appData.products.filter(p => p.cat === curProd.cat && p.id !== curProd.id).slice(0,5);
-            document.getElementById('similarRow').innerHTML = sims.map(p => `<div class="sim-card" onclick="openProd(${p.id})"><img src="${p.img}"></div>`).join('');
-
-            renderReviews();
-            document.getElementById('productView').style.display = 'flex';
+        function openWishlist() {
+            const list = document.getElementById('wishListContainer');
+            if(wishlist.length === 0) list.innerHTML = "<p>Wishlist is empty.</p>";
+            else {
+                list.innerHTML = wishlist.map(id => {
+                    const p = appData.products.find(x => x.id === id);
+                    if(!p) return '';
+                    return `<div style="display:flex; gap:10px; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
+                        <img src="${p.img}" style="width:50px; height:50px; object-fit:cover;">
+                        <div><b>${p.name}</b><br>₹${p.price}</div>
+                    </div>`;
+                }).join('');
+            }
+            document.getElementById('wishModal').style.display = 'flex';
         }
 
-        function updateGallery() {
-            document.getElementById('pvImg').src = currentImages[currentImgIdx];
-            
-            // Thumbs
-            document.getElementById('pvThumbs').innerHTML = currentImages.map((src, i) => 
-                `<img src="${src}" class="thumb ${i === currentImgIdx ? 'active' : ''}" onclick="setGallery(${i})">`
-            ).join('');
-        }
-
-        function changeImg(n) {
-            currentImgIdx += n;
-            if(currentImgIdx >= currentImages.length) currentImgIdx = 0;
-            if(currentImgIdx < 0) currentImgIdx = currentImages.length - 1;
-            updateGallery();
-        }
-
-        function setGallery(idx) {
-            currentImgIdx = idx;
-            updateGallery();
-        }
-
-        function renderReviews() {
-            const revs = appData.reviews.filter(r => r.pid === curProd.id);
-            const list = document.getElementById('reviewList');
-            list.innerHTML = revs.length ? revs.map(r => `<div class="review-item"><strong>${r.user}</strong>: ${r.text}</div>`).join('') : "<div style='color:#999;'>No reviews yet.</div>";
-        }
-
-        async function addReview() {
-            const txt = document.getElementById('revText').value;
-            if(!txt) return;
-            appData.reviews.push({ pid: curProd.id, user: user.name, text: txt });
-            await fetch(DB_URL, { method: "PUT", body: JSON.stringify(appData) });
-            document.getElementById('revText').value="";
-            renderReviews();
-        }
-
-        function addToCart() {
-            const sz = document.getElementById('pvSize').value;
-            if(!sz) return alert("Select Size");
-            cart.push({...curProd, size:sz, qty:1});
-            document.getElementById('productView').style.display='none';
+        // --- CART & CHECKOUT ---
+        function addToCart(id) {
+            const p = appData.products.find(x => x.id === id);
+            cart.push(p);
             document.getElementById('cCount').innerText = cart.length;
-            alert("Added!");
+            alert("Added to cart");
         }
 
         function openCart() {
-            const list = document.getElementById('cartList');
-            let total = 0;
-            list.innerHTML = cart.map(i => { total+=parseInt(i.price); return `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>${i.name} (${i.size})</span><b>₹${i.price}</b></div>`; }).join('');
-            document.getElementById('cartTotal').innerText = total;
-            document.getElementById('cartModal').style.display='flex';
-        }
-
-        function openCheckout() {
             if(cart.length === 0) return alert("Cart empty");
-            document.getElementById('cartModal').style.display = 'none';
             document.getElementById('checkoutModal').style.display = 'flex';
         }
 
         async function placeOrder() {
-            const addr = document.getElementById('coAddr').value;
-            if(!addr) return alert("Please fill address details");
-            
-            document.getElementById('loader').style.display = 'flex'; 
+            // 1. Gather Address Data
+            const state = document.getElementById('addrState').value;
+            const dist = document.getElementById('addrDist').value;
+            const taluka = document.getElementById('addrTaluka').value;
+            const pin = document.getElementById('addrPin').value;
+            const city = document.getElementById('addrCity').value;
+            const local = document.getElementById('addrLocal').value;
 
-            const r = await fetch(DB_URL);
-            const freshData = await r.json();
-            
-            let valid = true;
-            cart.forEach(cItem => {
-                const dbProd = freshData.products.find(p => p.id === cItem.id);
-                if(!dbProd || dbProd.stock[cItem.size] < cItem.qty) valid = false;
-                else dbProd.stock[cItem.size] -= cItem.qty; 
-            });
+            if(!state || !dist || !taluka || !pin || !city || !local) return alert("Please fill all address fields.");
 
-            if(!valid) {
-                document.getElementById('loader').style.display = 'none';
-                return alert("Some items went out of stock! Please refresh.");
-            }
+            const fullAddr = `${local}\nCity: ${city}, Taluka: ${taluka}\nDist: ${dist}, State: ${state} - ${pin}\nCountry: India`;
 
-            await fetch(DB_URL, { method: "PUT", body: JSON.stringify(freshData) });
-
+            // 2. Create Order
             const order = {
                 date: new Date().toISOString(),
                 user: user,
-                address: { city: addr + ", " + document.getElementById('coCity').value },
+                address: { city: fullAddr }, // Saving full block as 'city' for admin view simplicity
                 cart: cart,
-                total: document.getElementById('cartTotal').innerText,
+                total: cart.reduce((a,b)=>a+parseInt(b.price),0),
                 txnId: "Direct-WA",
                 status: "Ordered"
             };
+
             await fetch(ORDERS_URL, { method: "POST", body: JSON.stringify(order) });
 
-            let msg = `*NEW ORDER*\nUser: ${user.name}\nAddress: ${order.address.city}\n\nItems:\n`;
-            cart.forEach(i => msg += `- ${i.name} (${i.size})\n`);
-            msg += `\nTotal: ₹${order.total}`;
-            
+            // 3. WhatsApp Message
+            let msg = `*NEW ORDER*\nUser: ${user.name}\n\n*Address:*\n${fullAddr}\n\n*Items:*\n`;
+            cart.forEach(i => msg += `- ${i.name} (₹${i.price})\n`);
+            msg += `\n*Total: ₹${order.total}*`;
+
             window.open(`https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(msg)}`);
             
             cart = [];
-            document.getElementById('cCount').innerText = "0";
-            document.getElementById('loader').style.display = 'none';
-            alert("Order Placed Successfully!");
-            location.reload();
-        }
-
-        async function openMyOrders() {
-            const r = await fetch(ORDERS_URL);
-            const d = await r.json();
-            const list = document.getElementById('myOrdersList');
-            list.innerHTML = "";
-            
-            if(!d) { list.innerHTML = "No orders found."; return; }
-
-            const myOrders = Object.values(d).filter(o => o.user.phone === user.phone).reverse();
-            myOrders.forEach(o => {
-                const s = o.status;
-                const s1 = 'active', s2 = (s==='Shipped'||s==='Delivered')?'active':'', s3 = (s==='Delivered')?'active':'';
-                list.innerHTML += `
-                <div class="track-item">
-                    <div style="display:flex; justify-content:space-between; font-weight:bold;">
-                        <span>Order Date: ${new Date(o.date).toLocaleDateString()}</span><span>₹${o.total}</span>
-                    </div>
-                    <div class="track-status">Status: ${s}</div>
-                    <div class="track-progress">
-                        <div class="tp-step ${s1}"><div class="tp-dot"></div>Ordered</div>
-                        <div class="tp-step ${s2}"><div class="tp-dot"></div>Shipped</div>
-                        <div class="tp-step ${s3}"><div class="tp-dot"></div>Delivered</div>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('ordersModal').style.display = 'flex';
+            document.getElementById('cCount').innerText = 0;
+            document.getElementById('checkoutModal').style.display = 'none';
+            alert("Order Placed!");
         }
     </script>
 </body>
