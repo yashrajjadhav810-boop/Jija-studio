@@ -11,56 +11,56 @@
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); padding-bottom: 80px; overflow-x: hidden; }
         
         /* HEADER */
-        header { background: var(--primary); padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
-        .logo img { height: 35px; width: 35px; border-radius: 50%; border: 2px solid white; object-fit: cover; }
-        .icon-btn { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; position: relative; margin-left: 15px; }
-        .badge { position: absolute; top: -5px; right: -5px; background: white; color: var(--primary); font-size: 0.7rem; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        header { background: var(--primary); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; }
+        .logo img { height: 32px; width: 32px; border-radius: 50%; border: 2px solid white; object-fit: cover; }
+        .icon-btn { background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer; position: relative; margin-left: 12px; }
+        .badge { position: absolute; top: -5px; right: -5px; background: white; color: var(--primary); font-size: 0.65rem; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
         /* SEARCH & FILTER */
-        .search-wrap { padding: 10px 15px; background: white; position: sticky; top: 60px; z-index: 90; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .search-input { width: 100%; padding: 12px 20px; border: 1px solid #e2e8f0; border-radius: 50px; background: #f1f5f9; outline: none; box-sizing: border-box; }
+        .search-wrap { padding: 10px 15px; background: white; position: sticky; top: 56px; z-index: 90; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .search-input { width: 100%; padding: 10px 20px; border: 1px solid #e2e8f0; border-radius: 50px; background: #f1f5f9; outline: none; box-sizing: border-box; font-size: 0.9rem; }
 
-        .tabs { display: flex; gap: 10px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; background: white; border-bottom: 1px solid #eee; }
-        .tab-btn { padding: 8px 18px; border: 1px solid #e2e8f0; background: white; border-radius: 30px; font-size: 0.9rem; color: #64748b; white-space: nowrap; cursor: pointer; transition: 0.2s; font-weight: 500; }
+        .tabs { display: flex; gap: 8px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; background: white; border-bottom: 1px solid #eee; }
+        .tab-btn { padding: 6px 16px; border: 1px solid #e2e8f0; background: white; border-radius: 30px; font-size: 0.85rem; color: #64748b; white-space: nowrap; cursor: pointer; transition: 0.2s; font-weight: 500; }
         .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .sub-cat-row { display: flex; gap: 8px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; background: #f1f5f9; display: none; }
-        .sub-chip { background: white; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; color: #475569; white-space: nowrap; cursor: pointer; }
+        .sub-cat-row { display: flex; gap: 8px; padding: 8px 15px; overflow-x: auto; scrollbar-width: none; background: #f1f5f9; display: none; }
+        .sub-chip { background: white; border: 1px solid #cbd5e1; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; color: #475569; white-space: nowrap; cursor: pointer; }
         .sub-chip.active { background: #334155; color: white; border-color: #334155; }
 
         .filter-options { display: flex; gap: 10px; padding: 10px 15px; overflow-x: auto; background: var(--light); }
-        .filter-select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; background: white; font-size: 0.85rem; outline: none; color: #475569; }
+        .filter-select { padding: 6px; border-radius: 6px; border: 1px solid #ddd; background: white; font-size: 0.8rem; outline: none; color: #475569; }
 
         /* SLIDER & BANNERS */
-        .hero-slider { height: 220px; margin: 10px 15px; border-radius: 12px; overflow: hidden; position: relative; display: none; background: #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .hero-slider { height: 200px; margin: 10px 15px; border-radius: 12px; overflow: hidden; position: relative; display: none; background: #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .slide { position: absolute; inset: 0; opacity: 0; transition: 0.5s; display: flex; align-items: center; justify-content: center; }
         .slide.active { opacity: 1; }
         .slide img { width: 100%; height: 100%; object-fit: cover; }
 
         .cat-grid { display: flex; gap: 10px; padding: 5px 15px 15px; overflow-x: auto; scrollbar-width: none; }
-        .cat-card { min-width: 100px; height: 100px; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .cat-card { min-width: 90px; height: 90px; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .cat-media { width: 100%; height: 100%; object-fit: cover; }
-        .cat-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.8rem; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .cat-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.75rem; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
         /* GRID */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; padding: 15px; }
         .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; cursor: pointer; transition: 0.3s; }
-        .card-img-wrap { position: relative; height: 220px; }
+        .card-img-wrap { position: relative; height: 200px; }
         .card img { width: 100%; height: 100%; object-fit: cover; }
-        .wish-icon { position: absolute; top: 10px; right: 10px; background: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 5; transition: 0.2s; }
+        .wish-icon { position: absolute; top: 8px; right: 8px; background: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 5; transition: 0.2s; }
         .wish-icon.active { color: var(--primary); }
-        .badge-img { position: absolute; top: 10px; left: 10px; width: 35px; z-index: 5; }
+        .badge-img { position: absolute; top: 8px; left: 8px; width: 30px; z-index: 5; }
         
         .info { padding: 10px; }
-        .title { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
-        .price { font-weight: 700; font-size: 1.1rem; }
-        .btn-add { width: 100%; margin-top: 5px; padding: 6px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+        .title { font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+        .price { font-weight: 700; font-size: 1rem; }
+        .btn-add { width: 100%; margin-top: 5px; padding: 5px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
 
         /* MODALS */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-box { background: white; width: 90%; max-width: 500px; max-height: 90vh; border-radius: 15px; overflow-y: auto; position: relative; padding: 25px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .btn-full { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; font-weight: 600; font-size: 1rem; cursor: pointer; border-radius: 8px; margin-top: 10px; }
+        .modal-box { background: white; width: 90%; max-width: 500px; max-height: 90vh; border-radius: 15px; overflow-y: auto; position: relative; padding: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .btn-full { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; font-weight: 600; font-size: 0.95rem; cursor: pointer; border-radius: 8px; margin-top: 10px; }
 
         /* LOGIN INPUTS */
         #loginModal { z-index: 9999; }
@@ -72,14 +72,14 @@
         .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 4px; display: block; }
         .form-input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.9rem; box-sizing: border-box; }
         
-        /* GALLERY */
-        .pv-gallery { position: relative; width: 100%; height: 300px; background: #f9f9f9; border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
+        /* --- SMALLER GALLERY (AS REQUESTED) --- */
+        .pv-gallery { position: relative; width: 100%; height: 220px; background: #f9f9f9; border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
         .pv-main-img { width: 100%; height: 100%; object-fit: contain; }
-        .pv-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.3); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; z-index: 10; }
-        .pv-arrow.left { left: 10px; }
-        .pv-arrow.right { right: 10px; }
-        .thumb-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; }
-        .thumb { width: 50px; height: 50px; border-radius: 6px; border: 2px solid transparent; object-fit: cover; cursor: pointer; }
+        .pv-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.3); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; z-index: 10; }
+        .pv-arrow.left { left: 8px; }
+        .pv-arrow.right { right: 8px; }
+        .thumb-row { display: flex; gap: 6px; justify-content: center; margin-bottom: 10px; }
+        .thumb { width: 45px; height: 45px; border-radius: 6px; border: 2px solid transparent; object-fit: cover; cursor: pointer; }
         .thumb.active { border-color: var(--primary); }
 
         /* ANIMATION */
@@ -87,8 +87,8 @@
         @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
         
         /* TRACKING */
-        .track-item { border: 1px solid #eee; border-radius: 8px; padding: 15px; margin-bottom: 10px; background: white; }
-        .track-status { font-weight: bold; color: var(--primary); margin-top: 5px; font-size: 0.9rem; }
+        .track-item { border: 1px solid #eee; border-radius: 8px; padding: 12px; margin-bottom: 10px; background: white; }
+        .track-status { font-weight: bold; color: var(--primary); margin-top: 5px; font-size: 0.85rem; }
         
         /* LOADER */
         #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 8000; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: bold; display: none; }
@@ -177,8 +177,8 @@
     <div class="grid" id="grid"></div>
 
     <div id="productView" class="modal">
-        <div class="modal-box" style="height:90vh;">
-            <div style="position:absolute; top:15px; right:15px; background:rgba(255,255,255,0.8); border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:20;" onclick="document.getElementById('productView').style.display='none'">&times;</div>
+        <div class="modal-box">
+            <div style="position:absolute; top:12px; right:12px; background:rgba(255,255,255,0.8); border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:20;" onclick="document.getElementById('productView').style.display='none'">&times;</div>
             
             <div class="pv-gallery">
                 <div class="pv-arrow left" onclick="changeImg(-1)">&#10094;</div>
@@ -187,25 +187,25 @@
             </div>
             <div class="thumb-row" id="pvThumbs"></div>
             
-            <div id="pvVideoBox" style="display:none; padding:10px;"><iframe id="pvVideo" width="100%" height="200" frameborder="0"></iframe></div>
+            <div id="pvVideoBox" style="display:none; padding-bottom:10px;"><iframe id="pvVideo" width="100%" height="200" frameborder="0"></iframe></div>
 
-            <div style="padding:10px;">
-                <h2 id="pvTitle" style="margin:0 0 5px;"></h2>
-                <div style="font-size:1.2rem; font-weight:700; color:var(--primary);"><span id="pvPrice"></span></div>
-                <select id="pvSize" style="width:100%; padding:10px; margin-top:10px; border:1px solid #ddd; border-radius:6px;"></select>
-                <div id="pvStock" style="font-size:0.85rem; margin-top:5px; font-weight:600;"></div>
-                <p id="pvDesc" style="color:#666; font-size:0.9rem; line-height:1.5;"></p>
+            <div style="padding:0 5px 10px;">
+                <h2 id="pvTitle" style="margin:0 0 4px; font-size:1.2rem;"></h2>
+                <div style="font-size:1.1rem; font-weight:700; color:var(--primary);"><span id="pvPrice"></span></div>
+                <select id="pvSize" style="width:100%; padding:8px; margin-top:8px; border:1px solid #ddd; border-radius:6px; font-size:0.9rem;"></select>
+                <div id="pvStock" style="font-size:0.8rem; margin-top:4px; font-weight:600;"></div>
+                <p id="pvDesc" style="color:#666; font-size:0.85rem; line-height:1.4; margin-top:8px;"></p>
             </div>
 
-            <div style="font-weight:600; margin:10px 10px 0;">You might also like</div>
+            <div style="font-weight:600; margin:10px 5px 0; font-size:0.9rem;">You might also like</div>
             <div class="similar-row" id="similarRow"></div>
 
             <div class="review-box">
-                <div style="font-weight:600; margin-bottom:10px;">Reviews</div>
+                <div style="font-weight:600; margin-bottom:8px; font-size:0.9rem;">Reviews</div>
                 <div id="reviewList"></div>
                 <div style="display:flex; gap:5px; margin-top:10px;">
-                    <input id="revText" placeholder="Write review..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:4px;">
-                    <button onclick="addReview()" style="background:#333; color:white; border:none; border-radius:4px; padding:0 10px;">Post</button>
+                    <input id="revText" placeholder="Write review..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:4px; font-size:0.85rem;">
+                    <button onclick="addReview()" style="background:#333; color:white; border:none; border-radius:4px; padding:0 12px; font-size:0.85rem;">Post</button>
                 </div>
             </div>
 
@@ -457,7 +457,6 @@
 
         function applyFilters() {
             let list = appData.products || [];
-            
             const q = document.getElementById('searchBox').value.toLowerCase();
             if(q) list = list.filter(p => p.name.toLowerCase().includes(q));
             
