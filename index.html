@@ -17,11 +17,10 @@
         .icon-btn { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; position: relative; margin-left: 15px; }
         .badge { position: absolute; top: -5px; right: -5px; background: white; color: var(--primary); font-size: 0.7rem; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* SEARCH */
+        /* SEARCH & FILTER */
         .search-wrap { padding: 10px 15px; background: white; position: sticky; top: 60px; z-index: 90; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .search-input { width: 100%; padding: 12px 20px; border: 1px solid #e2e8f0; border-radius: 50px; background: #f1f5f9; outline: none; box-sizing: border-box; }
 
-        /* TABS & CHIPS */
         .tabs { display: flex; gap: 10px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; background: white; border-bottom: 1px solid #eee; }
         .tab-btn { padding: 8px 18px; border: 1px solid #e2e8f0; background: white; border-radius: 30px; font-size: 0.9rem; color: #64748b; white-space: nowrap; cursor: pointer; transition: 0.2s; font-weight: 500; }
         .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
@@ -59,9 +58,14 @@
         .btn-add { width: 100%; margin-top: 5px; padding: 6px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
 
         /* MODALS */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-box { background: white; width: 90%; max-width: 500px; max-height: 90vh; border-radius: 15px; overflow-y: auto; position: relative; padding: 20px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-box { background: white; width: 90%; max-width: 500px; max-height: 90vh; border-radius: 15px; overflow-y: auto; position: relative; padding: 25px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
         .btn-full { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; font-weight: 600; font-size: 1rem; cursor: pointer; border-radius: 8px; margin-top: 10px; }
+
+        /* LOGIN MODAL SPECIFIC */
+        #loginModal { z-index: 9999; }
+        .login-input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; font-size: 1rem; box-sizing: border-box; }
+        .login-input:focus { border-color: var(--primary); outline: none; }
 
         /* ADDRESS FORM */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
@@ -79,15 +83,41 @@
         .thumb.active { border-color: var(--primary); }
 
         /* ANIMATION */
-        .theme-particle { position: fixed; top: -10%; user-select: none; pointer-events: none; z-index: 5000; animation: fall linear forwards; opacity: 0.9; }
+        .theme-particle { position: fixed; top: -10%; user-select: none; pointer-events: none; z-index: 4000; animation: fall linear forwards; opacity: 0.9; }
         @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
         
         /* ORDER TRACKING */
         .track-item { border: 1px solid #eee; border-radius: 8px; padding: 15px; margin-bottom: 10px; background: white; }
         .track-status { font-weight: bold; color: var(--primary); margin-top: 5px; font-size: 0.9rem; }
+        
+        /* LOADER */
+        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 8000; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: bold; display: none; }
     </style>
 </head>
 <body>
+
+    <div id="loginModal" class="modal" style="display: flex;">
+        <div class="modal-box" style="text-align: center;">
+            <div style="font-size: 2rem; color: var(--primary); margin-bottom: 10px;"><i class="ri-shield-user-line"></i></div>
+            <h2 style="margin: 0 0 10px;">Welcome to Jija Studio</h2>
+            <p style="color: #64748b; margin-bottom: 20px;">Please login to continue shopping</p>
+            
+            <div id="loginStep1">
+                <input id="loginName" class="login-input" placeholder="Your Full Name">
+                <input id="loginPhone" class="login-input" type="tel" placeholder="Mobile Number (10 digits)">
+                <button class="btn-full" onclick="requestOtp()">Get OTP</button>
+            </div>
+
+            <div id="loginStep2" style="display: none;">
+                <p style="color: green; font-size: 0.9rem; margin-bottom: 10px;">OTP Sent! (Check Alert)</p>
+                <input id="loginOtp" class="login-input" type="number" placeholder="Enter 4-digit OTP">
+                <button class="btn-full" onclick="verifyOtp()">Verify & Login</button>
+                <div style="margin-top: 10px; font-size: 0.9rem; color: #64748b; cursor: pointer;" onclick="resendOtp()">Resend OTP</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loader">Processing...</div>
 
     <header>
         <div class="logo">
@@ -196,6 +226,7 @@
                         <option value="Karnataka">Karnataka</option>
                         <option value="Gujarat">Gujarat</option>
                         <option value="Delhi">Delhi</option>
+                        <option value="Punjab">Punjab</option>
                     </select>
                 </div>
             </div>
@@ -213,10 +244,6 @@
             <div style="margin-bottom:15px;">
                 <label class="form-label">Flat / House / Landmark</label>
                 <textarea class="form-input" id="addrLocal" rows="2"></textarea>
-            </div>
-
-            <div style="background:#f0fdf4; padding:10px; border-radius:6px; border:1px dashed var(--green); font-size:0.85rem; color:var(--green);">
-                <i class="ri-whatsapp-line"></i> Order details will be sent to WhatsApp.
             </div>
 
             <button class="btn-full" onclick="placeOrder()">PLACE ORDER ON WHATSAPP</button>
@@ -240,8 +267,9 @@
         let appData = { products: [], catBanners: [], subCategories: {}, settings: {theme:'default'} };
         let cart = [], wishlist = JSON.parse(localStorage.getItem('jijaWish')) || [];
         let curProd = null, currentImages = [], currentImgIdx = 0;
-        let user = JSON.parse(localStorage.getItem('jijaUser')) || { name: "Guest", phone: "0000000000" };
+        let user = JSON.parse(localStorage.getItem('jijaUser')); // Initially null
         let currentCat = 'all', currentSub = 'all';
+        let generatedOtp = null;
 
         const SIZES = {
             cloth: ["S", "M", "L", "XL", "XXL", "Free Size"],
@@ -251,6 +279,13 @@
         };
 
         window.onload = async () => {
+            // LOGIN CHECK
+            if (user && user.phone) {
+                document.getElementById('loginModal').style.display = 'none';
+            } else {
+                document.getElementById('loginModal').style.display = 'flex';
+            }
+
             const r = await fetch(DB_URL);
             const d = await r.json();
             if(d) {
@@ -267,7 +302,41 @@
             }
         };
 
-        // --- THEME & ANIMATION ---
+        // --- LOGIN & OTP LOGIC ---
+        function requestOtp() {
+            const name = document.getElementById('loginName').value;
+            const phone = document.getElementById('loginPhone').value;
+            
+            if(!name || phone.length !== 10) return alert("Please enter valid Name and 10-digit Phone");
+
+            // Simulate OTP Generation
+            generatedOtp = Math.floor(1000 + Math.random() * 9000);
+            alert(`[Jija Studio SMS]\nHi ${name}, your OTP is ${generatedOtp}`);
+
+            document.getElementById('loginStep1').style.display = 'none';
+            document.getElementById('loginStep2').style.display = 'block';
+        }
+
+        function verifyOtp() {
+            const input = document.getElementById('loginOtp').value;
+            if(input == generatedOtp) {
+                user = { 
+                    name: document.getElementById('loginName').value, 
+                    phone: document.getElementById('loginPhone').value 
+                };
+                localStorage.setItem('jijaUser', JSON.stringify(user));
+                document.getElementById('loginModal').style.display = 'none';
+                alert("Login Successful! Welcome.");
+            } else {
+                alert("Incorrect OTP. Try again.");
+            }
+        }
+
+        function resendOtp() {
+            alert(`[Jija Studio SMS]\nYour OTP is still ${generatedOtp}`);
+        }
+
+        // --- ANIMATION & THEME ---
         function applyTheme(t) {
             const r = document.documentElement.style;
             let symbols = [];
@@ -313,16 +382,12 @@
 
         function applyFilters() {
             let list = appData.products || [];
-            
-            // Search
             const q = document.getElementById('searchBox').value.toLowerCase();
             if(q) list = list.filter(p => p.name.toLowerCase().includes(q));
             
-            // Categories
             if(currentCat!=='all') list = list.filter(p => p.cat === currentCat);
             if(currentSub!=='all') list = list.filter(p => p.subCats && p.subCats.includes(currentSub));
 
-            // Budget
             const budget = document.getElementById('budgetFilter').value;
             if(budget !== 'all') {
                 list = list.filter(p => {
@@ -334,13 +399,11 @@
                 });
             }
 
-            // Size
             const sizeVal = document.getElementById('sizeFilter').value;
             if(sizeVal !== 'all' && document.getElementById('sizeFilter').style.display !== 'none') {
                 list = list.filter(p => p.stock && p.stock[sizeVal] > 0);
             }
 
-            // Sort (Rank or Price)
             const sort = document.getElementById('sortSelect').value;
             if(sort === 'low') list.sort((a,b) => a.price - b.price);
             else if(sort === 'high') list.sort((a,b) => b.price - a.price);
@@ -380,7 +443,6 @@
                 subRow.style.display = 'none';
             }
 
-            // Size Filter Toggle
             const sf = document.getElementById('sizeFilter');
             const sizes = SIZES[cat];
             if(sizes) {
@@ -415,6 +477,9 @@
             const sel = document.getElementById('pvSize');
             sel.innerHTML = '<option value="">Select Size</option>';
             for(let [s, q] of Object.entries(curProd.stock)) if(q > 0) sel.innerHTML += `<option value="${s}">Size ${s}</option>`;
+
+            const sims = appData.products.filter(p => p.cat === curProd.cat && p.id !== curProd.id).slice(0,5);
+            document.getElementById('similarRow').innerHTML = sims.map(p => `<div class="sim-card" onclick="openProd(${p.id})"><img src="${p.img}"></div>`).join('');
 
             document.getElementById('productView').style.display = 'flex';
         }
