@@ -9,43 +9,69 @@
     <style>
         :root { --primary: #D81B60; --dark: #1e293b; --light: #f1f5f9; --white: #ffffff; --green: #10b981; --red: #ef4444; }
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); display: flex; height: 100vh; color: #334155; }
+        
         .sidebar { width: 260px; background: var(--dark); color: white; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; }
         .brand { font-size: 1.4rem; font-weight: 600; color: var(--primary); margin-bottom: 30px; display: flex; align-items: center; gap: 12px; }
         .brand img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); background: white; }
-        .nav-item { padding: 12px; color: #94a3b8; display: flex; gap: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-bottom: 5px; }
+
+        .nav-item { padding: 12px; color: #94a3b8; display: flex; gap: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; text-decoration: none; margin-bottom: 5px; }
         .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
-        .main { flex: 1; overflow-y: auto; padding: 30px; }
-        .card { background: white; border-radius: 12px; padding: 25px; margin-bottom: 25px; border: 1px solid #e2e8f0; }
+        
+        .main { flex: 1; overflow-y: auto; padding: 30px; position: relative; }
+        
+        .card { background: white; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
         .card-header { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 10px; box-sizing: border-box; }
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
+        
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 10px; font-family: inherit; box-sizing: border-box; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-danger { background: var(--red); color: white; }
         .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
-        .theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; }
-        .theme-option { border: 2px solid #e2e8f0; border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; }
-        .theme-option.active { border-color: var(--primary); background: var(--primary); color: white; }
-        .sub-tag { background: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; margin: 3px; border: 1px solid #cbd5e1; }
+
+        /* MULTI SELECT TAGS */
+        .tags-box { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; min-height: 30px; padding: 5px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; }
+        .tag { background: var(--primary); color: white; padding: 4px 10px; border-radius: 15px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; }
+        .tag i { cursor: pointer; background: rgba(0,0,0,0.2); border-radius: 50%; padding: 2px; font-size: 0.8rem; }
+
+        /* STOCK GRID */
+        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 10px; }
+        .stk-box { background: #f8fafc; padding: 5px; border: 1px solid #cbd5e1; border-radius: 5px; text-align: center; }
+        .stk-box label { font-size: 0.75rem; display: block; font-weight: 600; margin-bottom: 3px; }
+        .stk-box input { margin: 0; text-align: center; font-weight: 700; }
+
+        /* TABLES */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size:0.9rem; }
+        th { text-align: left; padding: 12px; background: #f1f5f9; color: #64748b; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 12px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        .thumb { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; border: 1px solid #e2e8f0; }
+        
+        /* ORDERS */
+        .status-select { padding: 5px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; cursor: pointer; }
+        .status-Ordered { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+        .status-Shipped { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+        .status-Delivered { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+
         .section { display: none; }
         .section.active { display: block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size:0.9rem; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; }
-        .thumb { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; }
-        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 999; display: none; align-items: center; justify-content: center; }
+        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 999; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #ddd; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div id="loader"><div>Loading...</div></div>
+<div id="loader"><div class="spinner"></div><div style="margin-top:10px; font-weight:600; color:var(--primary);">Syncing...</div></div>
 
 <div class="sidebar">
     <div class="brand">
-        <img src="logo.jpg" onerror="this.src='https://via.placeholder.com/50?text=Logo'"> Jija Admin
+        <img src="logo.jpg" onerror="this.src='https://via.placeholder.com/50?text=Logo'">
+        Jija Admin
     </div>
-    <div class="nav-item active" onclick="showSection('orderSection', this)"><i class="ri-shopping-bag-3-line"></i> Orders</div>
-    <div class="nav-item" onclick="showSection('prodSection', this)"><i class="ri-add-circle-line"></i> Products</div>
-    <div class="nav-item" onclick="showSection('catSection', this)"><i class="ri-layout-grid-line"></i> Categories</div>
-    <div class="nav-item" onclick="showSection('settingSection', this)"><i class="ri-magic-line"></i> Theme</div>
+    
+    <div class="nav-item active" onclick="showSection('orderSection', this)"><i class="ri-shopping-bag-3-line"></i> Check Orders</div>
+    <div class="nav-item" onclick="showSection('prodSection', this)"><i class="ri-add-circle-line"></i> Add Product</div>
+    <div class="nav-item" onclick="showSection('catSection', this)"><i class="ri-layout-grid-line"></i> Manage Categories</div>
+    <div class="nav-item" onclick="showSection('invSection', this)"><i class="ri-list-check"></i> Inventory</div>
 </div>
 
 <div class="main">
@@ -54,67 +80,116 @@
         <div class="card">
             <div class="card-header">
                 <span>Customer Orders</span>
-                <button class="btn btn-primary" onclick="loadData()">Refresh</button>
+                <button class="btn btn-primary" onclick="loadData()"><i class="ri-refresh-line"></i> Refresh</button>
             </div>
-            <div style="overflow-x:auto;"><table id="orderTable"><thead><tr><th>Date</th><th>Details</th><th>Status</th></tr></thead><tbody id="orderList"></tbody></table></div>
+            <div style="overflow-x:auto;">
+                <table id="orderTable">
+                    <thead><tr><th>Date</th><th>Customer</th><th>Items & Total</th><th>Status</th></tr></thead>
+                    <tbody id="orderList"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <div id="prodSection" class="section">
         <div class="card" id="productForm">
-            <div class="card-header"><span id="formTitle">Add Product</span> <button class="btn btn-danger" id="cancelEdit" style="display:none;" onclick="resetForm()">Cancel</button></div>
+            <div class="card-header">
+                <span id="formTitle">Add New Product</span> 
+                <button class="btn btn-danger" id="cancelEdit" style="display:none;" onclick="resetForm()">Cancel Edit</button>
+            </div>
+            
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div>
                     <input id="pName" placeholder="Product Name">
-                    <select id="pCat" onchange="renderSubSelect()"><option value="cloth">Fashion</option><option value="kids">Kids</option><option value="footwear">Footwear</option><option value="jewelry">Jewelry</option><option value="toy">Toy</option></select>
-                    <select id="pSubCat"><option value="">Select Sub-Category...</option></select>
-                </div>
+                    
+                    <label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Main Category</label>
+                    <select id="pCat" onchange="renderSubSelect()">
+                        <option value="cloth">Adult Fashion</option>
+                        <option value="kids">Kids Wear</option>
+                        <option value="footwear">Footwear</option>
+                        <option value="jewelry">Jewelry</option>
+                        <option value="toy">Toy</option>
+                    </select>
+
+                    <label style="font-size:0.8rem; font-weight:bold; color:#64748b; margin-top:10px; display:block;">Sub-Categories (Tags)</label>
+                    <div style="display:flex; gap:5px;">
+                        <select id="pSubDropdown" style="margin-bottom:0;">
+                            <option value="">Select Sub-Category...</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="addTagFromDropdown()" style="padding: 0 15px;">Add</button>
+                    </div>
+                    <div id="selectedTagsBox" class="tags-box"></div>
+                    </div>
                 <div>
-                    <input id="pPrice" type="number" placeholder="Price">
-                    <input id="pBadge" placeholder="Badge (Sale/New)">
-                    <input id="pRank" type="number" placeholder="Rank (1=Top)" value="100">
+                    <input id="pPrice" type="number" placeholder="Selling Price">
+                    <input id="pMrp" type="number" placeholder="MRP">
+                    <input id="pBadge" placeholder="Badge URL (e.g. Sale)">
+                    <div style="display:flex; align-items:center; gap:10px; background:#f0fdf4; padding:5px; border-radius:5px;">
+                        <label style="margin:0; font-size:0.8rem; font-weight:600; color:#15803d;">Page Rank (1=Top):</label>
+                        <input id="pRank" type="number" value="100" style="margin:0; width:70px;">
+                    </div>
                 </div>
             </div>
-            <input id="pImg" placeholder="Image 1 URL (Main)">
-            <input id="pImg2" placeholder="Image 2 URL">
-            <input id="pImg3" placeholder="Image 3 URL">
+            
+            <input id="pImg" placeholder="Main Image URL">
+            <div style="display:flex; gap:10px;">
+                <input id="pImg2" placeholder="Image 2 URL">
+                <input id="pImg3" placeholder="Image 3 URL">
+            </div>
             <input id="pVideo" placeholder="YouTube Video URL">
             <textarea id="pDesc" rows="2" placeholder="Description..."></textarea>
-            <div style="margin-bottom:10px;"><input type="checkbox" id="pBanner" style="width:auto;"> Show in Banner Slider</div>
-            <div style="background:#f0fdf4; padding:10px; border:1px dashed green;">
-                <label>Inventory:</label>
-                <div id="stockGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap:5px;"></div>
+            
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <input type="checkbox" id="pBanner" style="width:auto; margin:0;">
+                <label for="pBanner" style="margin:0;">Promote in Home Slider?</label>
             </div>
-            <button class="btn btn-primary" onclick="saveProduct()" style="margin-top:15px; width:100%;">Save Product</button>
+
+            <div style="background:#f0fdf4; padding:15px; border-radius:8px; border:1px dashed var(--green);">
+                <label style="font-weight:600; color:#15803d;"><i class="ri-stack-line"></i> Manage Inventory Stock</label>
+                <div id="stockGrid" class="stock-grid"></div>
+            </div>
+
+            <button class="btn btn-primary" onclick="saveProduct()" style="margin-top:20px; width:100%;" id="saveBtn">Save Product</button>
         </div>
-        <div class="card"><table id="prodTable"><thead><tr><th>Img</th><th>Name</th><th>Price</th><th>Action</th></tr></thead><tbody id="prodList"></tbody></table></div>
     </div>
 
     <div id="catSection" class="section">
         <div class="card">
-            <div class="card-header">Manage Sub-Categories</div>
-            <div style="display:flex; gap:10px;">
-                <select id="manageCat" style="width:150px;" onchange="renderManageTags()"><option value="cloth">Fashion</option><option value="kids">Kids</option><option value="footwear">Footwear</option><option value="jewelry">Jewelry</option><option value="toy">Toy</option></select>
-                <input id="newSubName" placeholder="New Sub-Category Name" style="flex:1;">
-                <button class="btn btn-primary" onclick="addNewSubCategory()">Add</button>
+            <div class="card-header">Create New Sub-Categories</div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <select id="manageCat" style="width: 200px;" onchange="renderManageTags()">
+                    <option value="cloth">Adult Fashion</option>
+                    <option value="kids">Kids Wear</option>
+                    <option value="footwear">Footwear</option>
+                    <option value="jewelry">Jewelry</option>
+                    <option value="toy">Toy</option>
+                </select>
+                <input id="newSubName" placeholder="New Name (e.g. Lehenga)" style="flex:1; margin-bottom:0;">
+                <button class="btn btn-primary" onclick="addNewSubCategory()">Create</button>
             </div>
-            <div id="activeSubTags" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:15px;"></div>
+            <div style="margin-top:20px;">
+                <label style="font-weight:600; color:#64748b;">Active Sub-Categories (Click X to delete):</label>
+                <div id="activeSubTags" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">Add Banner Ad</div>
+            <div style="display:flex; gap:10px;">
+                <select id="banCat" style="width:150px;"><option value="">Link To...</option></select>
+                <input id="banMedia" placeholder="Image/Video URL" style="flex:1;">
+                <button class="btn btn-primary" onclick="addCategoryBanner()">Add</button>
+            </div>
+            <div id="bannerGrid" style="margin-top:10px; display:grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap:10px;"></div>
         </div>
     </div>
 
-    <div id="settingSection" class="section">
+    <div id="invSection" class="section">
         <div class="card">
-            <div class="card-header">Website Festival Theme</div>
-            <div class="theme-grid">
-                <div class="theme-option" onclick="setTheme('default', this)">🌸 Default</div>
-                <div class="theme-option" onclick="setTheme('diwali', this)">🪔 Diwali</div>
-                <div class="theme-option" onclick="setTheme('christmas', this)">🎄 Christmas</div>
-                <div class="theme-option" onclick="setTheme('newyear', this)">🎆 New Year</div>
-                <div class="theme-option" onclick="setTheme('holi', this)">🎨 Holi</div>
-                <div class="theme-option" onclick="setTheme('valentine', this)">💖 Valentine</div>
-                <div class="theme-option" onclick="setTheme('eid', this)">🌙 Eid</div>
+            <div class="card-header">Product List</div>
+            <div style="overflow-x:auto;">
+                <table><thead><tr><th width="60">Img</th><th>Product</th><th>Tags</th><th>Action</th></tr></thead><tbody id="tableBody"></tbody></table>
             </div>
-            <button class="btn btn-primary" style="margin-top:20px; width:100%;" onclick="saveSettings()">Apply Theme</button>
         </div>
     </div>
 
@@ -124,10 +199,17 @@
     const DB_URL = "https://jija-studio-default-rtdb.firebaseio.com/jijaData.json";
     const ORDERS_URL = "https://jija-studio-default-rtdb.firebaseio.com/orders.json";
     
-    let appData = { products: [], subCategories: {}, settings: {theme:'default'} };
+    let appData = { products: [], catBanners: [], subCategories: {} };
     let ordersData = {};
     let editId = null;
-    const SIZES = { cloth: ["S","M","L","XL","XXL"], kids: ["0-1Y","1-2Y","3-4Y","5-6Y"], footwear: [6,7,8,9,10], jewelry: ["Free Size"] };
+    let currentTags = []; // Stores selected tags for the product being added
+
+    const SIZES = {
+        cloth: ["S","M","L","XL","XXL","Free Size"],
+        kids: ["0-1Y","1-2Y","2-3Y","3-4Y","4-5Y","5-6Y"],
+        footwear: [1,2,3,4,5,6,7,8,9,10],
+        jewelry: ["2-2","2-4","2-6","2-8","Free Size"]
+    };
 
     window.onload = loadData;
 
@@ -136,8 +218,9 @@
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         if(btn) btn.classList.add('active');
-        if(id === 'catSection') renderManageTags();
-        if(id === 'prodSection') { renderSubSelect(); renderProdTable(); }
+        if(id === 'catSection') { renderManageTags(); renderBanners(); }
+        if(id === 'invSection') renderTable();
+        if(id === 'prodSection') renderSubSelect();
     }
 
     async function loadData() {
@@ -147,21 +230,19 @@
             const d1 = await r1.json();
             if(d1) {
                 appData = d1;
-                if(!appData.products) appData.products=[];
-                // Fix: Ensure subCategories is an object, not array
+                if(!appData.products) appData.products = [];
+                if(!appData.catBanners) appData.catBanners = [];
                 if(!appData.subCategories || Array.isArray(appData.subCategories)) {
-                    appData.subCategories = { cloth:["Saree"], kids:["Boys"], footwear:["Shoes"], jewelry:["Set"], toy:["Car"] }; 
+                    // Default categories if missing
+                    appData.subCategories = { cloth:["Saree","Kurti"], kids:["Frock"], footwear:["Heels"], jewelry:["Necklace"], toy:["Car"] };
                 }
-                if(!appData.settings) appData.settings={theme:'default'};
-                
-                // Set Active Theme UI
-                const active = document.querySelector(`.theme-option[onclick*="'${appData.settings.theme}'"]`);
-                if(active) active.classList.add('active');
             }
+
             const r2 = await fetch(ORDERS_URL);
             ordersData = await r2.json() || {};
-            renderOrders();
-        } catch(e) { console.log(e); }
+
+            refreshUI();
+        } catch(e) { console.error(e); }
         document.getElementById('loader').style.display = 'none';
     }
 
@@ -169,48 +250,64 @@
         document.getElementById('loader').style.display = 'flex';
         await fetch(DB_URL, { method: "PUT", body: JSON.stringify(appData) });
         document.getElementById('loader').style.display = 'none';
+        refreshUI();
     }
 
-    // --- CATEGORY FIX ---
-    function renderManageTags() {
-        const cat = document.getElementById('manageCat').value;
-        const subs = appData.subCategories[cat] || [];
-        document.getElementById('activeSubTags').innerHTML = subs.map(s => 
-            `<div class="sub-tag">${s} <i class="ri-close-line" style="color:red;cursor:pointer;" onclick="removeSub('${cat}','${s}')"></i></div>`
-        ).join('');
-    }
-    function addNewSubCategory() {
-        const cat = document.getElementById('manageCat').value;
-        const val = document.getElementById('newSubName').value.trim();
-        if(!val) return;
-        if(!appData.subCategories[cat]) appData.subCategories[cat] = [];
-        appData.subCategories[cat].push(val);
-        document.getElementById('newSubName').value = "";
-        saveData();
-        renderManageTags();
-    }
-    function removeSub(cat, s) {
-        if(confirm("Delete?")) {
-            appData.subCategories[cat] = appData.subCategories[cat].filter(x => x !== s);
-            saveData();
-            renderManageTags();
-        }
+    function refreshUI() {
+        renderOrders();
+        renderSubSelect(); 
+        renderManageTags(); 
+        renderTable();
+        renderBanners();
     }
 
-    // --- PRODUCT ---
+    // --- 1. PRODUCT & TAG LOGIC ---
     function renderSubSelect() {
         const cat = document.getElementById('pCat').value;
         const subs = appData.subCategories[cat] || [];
-        document.getElementById('pSubCat').innerHTML = '<option value="">Select...</option>' + subs.map(s => `<option value="${s}">${s}</option>`).join('');
         
+        // Populate Dropdown for Tags
+        const drop = document.getElementById('pSubDropdown');
+        drop.innerHTML = '<option value="">Select Sub-Category...</option>' + subs.map(s => `<option value="${s}">${s}</option>`).join('');
+        
+        // Update Stock Inputs
+        const div = document.getElementById('stockGrid');
         const sizes = SIZES[cat] || ["General"];
-        document.getElementById('stockGrid').innerHTML = sizes.map(s => `<div><small>${s}</small><input class="stk-in" data-s="${s}" type="number" style="width:100%;" value="0"></div>`).join('');
+        div.innerHTML = sizes.map(s => `<div class="stk-box"><label>${s}</label><input type="number" class="stk-in" data-s="${s}" value="0"></div>`).join('');
+        
+        // Render current tags (in case editing or switching cats)
+        renderCurrentTags();
+        
+        // Banner Dropdown
+        let allSubs = [];
+        for(let k in appData.subCategories) allSubs = [...allSubs, ...appData.subCategories[k]];
+        document.getElementById('banCat').innerHTML = '<option value="">Link To...</option>' + allSubs.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    function addTagFromDropdown() {
+        const val = document.getElementById('pSubDropdown').value;
+        if(val && !currentTags.includes(val)) {
+            currentTags.push(val);
+            renderCurrentTags();
+        }
+    }
+
+    function removeTag(t) {
+        currentTags = currentTags.filter(tag => tag !== t);
+        renderCurrentTags();
+    }
+
+    function renderCurrentTags() {
+        document.getElementById('selectedTagsBox').innerHTML = currentTags.map(t => 
+            `<span class="tag">${t} <i class="ri-close-line" onclick="removeTag('${t}')"></i></span>`
+        ).join('');
     }
 
     function saveProduct() {
         const name = document.getElementById('pName').value;
-        if(!name) return alert("Name Required");
-        
+        if(!name) return alert("Product Name Required");
+        if(currentTags.length === 0) return alert("Please add at least 1 Sub-Category tag");
+
         let stock = {};
         document.querySelectorAll('.stk-in').forEach(i => stock[i.dataset.s] = parseInt(i.value)||0);
 
@@ -218,74 +315,176 @@
             id: editId || Date.now(),
             name,
             cat: document.getElementById('pCat').value,
-            subCats: [document.getElementById('pSubCat').value],
+            subCats: currentTags, // Save Array of Tags
             price: document.getElementById('pPrice').value,
+            mrp: document.getElementById('pMrp').value,
+            badge: document.getElementById('pBadge').value,
+            rank: parseInt(document.getElementById('pRank').value) || 100,
             img: document.getElementById('pImg').value,
             img2: document.getElementById('pImg2').value,
             img3: document.getElementById('pImg3').value,
             video: document.getElementById('pVideo').value,
             desc: document.getElementById('pDesc').value,
             isBanner: document.getElementById('pBanner').checked,
-            badge: document.getElementById('pBadge').value,
-            rank: parseInt(document.getElementById('pRank').value) || 100,
             stock
         };
 
         if(editId) {
             const idx = appData.products.findIndex(p => p.id === editId);
             appData.products[idx] = prod;
-        } else appData.products.push(prod);
-
+        } else {
+            appData.products.push(prod);
+        }
         saveData();
         resetForm();
-        renderProdTable();
     }
 
     function startEdit(id) {
         const p = appData.products.find(x => x.id === id);
         if(!p) return;
         editId = id;
-        document.getElementById('formTitle').innerText = "Edit Product";
+        showSection('prodSection', document.querySelectorAll('.nav-item')[1]);
+        
+        document.getElementById('formTitle').innerText = "Edit Product: " + p.name;
+        document.getElementById('saveBtn').innerText = "Update Product";
         document.getElementById('cancelEdit').style.display = 'block';
+
         document.getElementById('pName').value = p.name;
         document.getElementById('pCat').value = p.cat;
         document.getElementById('pPrice').value = p.price;
+        document.getElementById('pMrp').value = p.mrp || "";
+        document.getElementById('pBadge').value = p.badge || "";
+        document.getElementById('pRank').value = p.rank || 100;
         document.getElementById('pImg').value = p.img;
-        document.getElementById('pImg2').value = p.img2||"";
-        document.getElementById('pImg3').value = p.img3||"";
-        document.getElementById('pVideo').value = p.video||"";
-        document.getElementById('pDesc').value = p.desc||"";
-        document.getElementById('pBadge').value = p.badge||"";
+        document.getElementById('pImg2').value = p.img2 || "";
+        document.getElementById('pImg3').value = p.img3 || "";
+        document.getElementById('pVideo').value = p.video || "";
+        document.getElementById('pDesc').value = p.desc || "";
         document.getElementById('pBanner').checked = p.isBanner;
+
+        currentTags = p.subCats || []; // Load Existing Tags
         renderSubSelect();
-        if(p.subCats) document.getElementById('pSubCat').value = p.subCats[0];
-        window.scrollTo(0,0);
+        
+        setTimeout(() => {
+            document.querySelectorAll('.stk-in').forEach(i => {
+                if(p.stock[i.dataset.s] !== undefined) i.value = p.stock[i.dataset.s];
+            });
+        }, 50);
     }
 
     function resetForm() {
         editId = null;
+        currentTags = [];
         document.querySelectorAll('input, textarea').forEach(i => i.value='');
-        document.getElementById('cancelEdit').style.display='none';
-        document.getElementById('formTitle').innerText = "Add Product";
+        document.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked=false);
+        document.getElementById('pRank').value = 100;
+        document.getElementById('formTitle').innerText = "Add New Product";
+        document.getElementById('saveBtn').innerText = "Save Product";
+        document.getElementById('cancelEdit').style.display = "none";
+        renderSubSelect();
     }
 
-    function renderProdTable() {
-        document.getElementById('prodList').innerHTML = appData.products.slice().reverse().map(p => 
-            `<tr><td><img src="${p.img}" class="thumb"></td><td>${p.name}</td><td>${p.price}</td><td><button class="btn-sm" onclick="startEdit(${p.id})">Edit</button></td></tr>`
+    function deleteProd(id) {
+        if(confirm("Delete Product?")) {
+            appData.products = appData.products.filter(p => p.id !== id);
+            saveData();
+        }
+    }
+
+    // --- 2. ORDERS ---
+    function renderOrders() {
+        const tbody = document.getElementById('orderList');
+        tbody.innerHTML = "";
+        const orderArr = Object.entries(ordersData).map(([key, val]) => ({...val, key})).reverse();
+        if(orderArr.length === 0) { tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:20px;'>No orders found.</td></tr>"; return; }
+
+        orderArr.forEach(o => {
+            let itemsHtml = o.cart.map(i => `<div>${i.name} (${i.size}) x${i.qty}</div>`).join('');
+            tbody.innerHTML += `
+            <tr style="background:white; border-bottom:1px solid #eee;">
+                <td>${new Date(o.date).toLocaleDateString()}<br><small style="color:#888;">${new Date(o.date).toLocaleTimeString()}</small></td>
+                <td><strong>${o.user.name}</strong><br>${o.user.phone}<br><small style="color:#666;">Ref: ${o.txnId}</small></td>
+                <td>${itemsHtml}<div style="font-weight:bold; margin-top:5px; color:var(--primary);">Total: ₹${o.total}</div></td>
+                <td>
+                    <select class="status-select status-${o.status}" onchange="updateOrderStatus('${o.key}', this.value)">
+                        <option value="Ordered" ${o.status==='Ordered'?'selected':''}>Ordered</option>
+                        <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
+                        <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
+                    </select>
+                </td>
+            </tr>`;
+        });
+    }
+
+    async function updateOrderStatus(id, status) {
+        await fetch(`https://jija-studio-default-rtdb.firebaseio.com/orders/${id}/status.json`, { method: "PUT", body: JSON.stringify(status) });
+        ordersData[id].status = status;
+        renderOrders();
+    }
+
+    // --- 3. CATEGORY MANAGER ---
+    function renderManageTags() {
+        const cat = document.getElementById('manageCat').value;
+        const subs = appData.subCategories[cat] || [];
+        document.getElementById('activeSubTags').innerHTML = subs.map(s => 
+            `<div class="tag" style="background:#e2e8f0; color:#333; border:1px solid #ccc;">${s} <i class="ri-close-circle-fill" style="color:red;" onclick="removeSubCat('${cat}', '${s}')"></i></div>`
         ).join('');
     }
 
-    function renderOrders() {
-        const list = Object.values(ordersData).reverse();
-        document.getElementById('orderList').innerHTML = list.length ? list.map(o => `<tr><td>${new Date(o.date).toLocaleDateString()}</td><td>${o.user.name} - ${o.total}</td><td>${o.status}</td></tr>`).join('') : "<tr><td colspan='3'>No Orders</td></tr>";
+    function addNewSubCategory() {
+        const cat = document.getElementById('manageCat').value;
+        const name = document.getElementById('newSubName').value.trim();
+        if(!name) return alert("Enter name");
+        if(!appData.subCategories[cat]) appData.subCategories[cat] = [];
+        if(!appData.subCategories[cat].includes(name)) {
+            appData.subCategories[cat].push(name);
+            document.getElementById('newSubName').value = "";
+            saveData();
+        }
     }
 
-    function setTheme(name, el) {
-        appData.settings.theme = name;
-        document.querySelectorAll('.theme-option').forEach(d => d.classList.remove('active'));
-        el.classList.add('active');
+    function removeSubCat(cat, sub) {
+        if(confirm(`Delete '${sub}'?`)) {
+            appData.subCategories[cat] = appData.subCategories[cat].filter(s => s !== sub);
+            saveData();
+        }
     }
-    async function saveSettings() { await saveData(); alert("Theme Saved!"); }
+
+    // --- 4. INVENTORY TABLE ---
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+        appData.products.slice().reverse().forEach(p => {
+            let tagsHtml = p.subCats ? p.subCats.join(", ") : "-";
+            tbody.innerHTML += `
+            <tr style="background:white;">
+                <td><img src="${p.img}" class="thumb"></td>
+                <td><div style="font-weight:600;">${p.name}</div><div style="font-size:0.8rem; color:#666;">${p.cat}</div></td>
+                <td><div style="font-size:0.8rem; background:#f1f5f9; padding:2px 5px; border-radius:4px;">${tagsHtml}</div></td>
+                <td>
+                    <button class="btn btn-sm" style="border:1px solid #ccc;" onclick="startEdit(${p.id})">Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteProd(${p.id})">Del</button>
+                </td>
+            </tr>`;
+        });
+    }
+
+    function addCategoryBanner() {
+        const sub = document.getElementById('banCat').value;
+        const media = document.getElementById('banMedia').value;
+        if(sub && media) { appData.catBanners.push({ sub, media, type: 'img' }); saveData(); }
+    }
+    
+    function renderBanners() {
+        document.getElementById('bannerGrid').innerHTML = appData.catBanners.map((b, i) => 
+            `<div style="position:relative; height:80px; border-radius:6px; overflow:hidden; background:black;">
+                <img src="${b.media}" style="width:100%; height:100%; object-fit:cover; opacity:0.7;">
+                <div style="position:absolute; bottom:0; width:100%; color:white; font-size:0.7rem; text-align:center;">${b.sub}</div>
+                <div style="position:absolute; top:2px; right:2px; background:red; color:white; width:18px; height:18px; border-radius:50%; text-align:center; cursor:pointer;" onclick="delBanner(${i})">&times;</div>
+            </div>`
+        ).join('');
+    }
+    function delBanner(i) { appData.catBanners.splice(i,1); saveData(); }
 </script>
 </body>
 </html>
