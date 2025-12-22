@@ -44,7 +44,7 @@
 </head>
 <body>
 
-<div id="loader">Syncing...</div>
+<div id="loader">Syncing Data...</div>
 
 <div class="sidebar">
     <div class="brand">
@@ -137,7 +137,12 @@
     const DB_URL = "https://jija-studio-default-rtdb.firebaseio.com/jijaData.json";
     const ORDERS_URL = "https://jija-studio-default-rtdb.firebaseio.com/orders.json";
     
-    let appData = { products: [], subCategories: {}, settings: {theme:'default'} };
+    // Safety Init
+    let appData = { 
+        products: [], 
+        subCategories: { cloth:[], kids:[], footwear:[], jewelry:[], toy:[] }, 
+        settings: {theme:'default'} 
+    };
     let ordersData = {};
     let currentTags = [];
     
@@ -162,7 +167,13 @@
             if(d) {
                 appData = d;
                 if(!appData.products) appData.products=[];
-                if(!appData.subCategories || Array.isArray(appData.subCategories)) appData.subCategories = { cloth:["Saree"], kids:["Frock"], footwear:["Shoes"], jewelry:["Set"], toy:["Car"] };
+                
+                // 🔥 CRITICAL FIX: Ensure subCategories is an Object (not array)
+                if(!appData.subCategories || Array.isArray(appData.subCategories)) {
+                    console.log("Fixing DB Structure...");
+                    appData.subCategories = { cloth:["Saree"], kids:["Frock"], footwear:["Shoes"], jewelry:["Set"], toy:["Car"] };
+                }
+                
                 if(!appData.settings) appData.settings={theme:'default'};
                 
                 // Highlight Theme
@@ -235,6 +246,7 @@
     // --- CATS ---
     function renderManageTags() {
         const cat = document.getElementById('manCat').value;
+        // Fix for undefined array error
         const subs = appData.subCategories[cat] || [];
         document.getElementById('activeSubTags').innerHTML = subs.map(s => `<div class="tag">${s} <i class="ri-close-line" style="cursor:pointer" onclick="delSub('${cat}','${s}')"></i></div>`).join('');
     }
