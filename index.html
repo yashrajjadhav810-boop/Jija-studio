@@ -7,34 +7,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        :root { --primary: #D81B60; --dark: #1e293b; --light: #f8fafc; --white: #ffffff; }
-        * { -webkit-tap-highlight-color: transparent; }
+        :root { --primary: #D81B60; --dark: #1e293b; --light: #f8fafc; --white: #ffffff; --green: #10b981; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); padding-bottom: 80px; overflow-x: hidden; }
         
         /* HEADER */
-        header { background: var(--primary); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; }
-        .logo img { height: 32px; width: 32px; border-radius: 50%; border: 2px solid white; object-fit: cover; }
-        .icon-btn { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; position: relative; margin-left: 12px; }
-        .badge { position: absolute; top: -5px; right: -5px; background: white; color: var(--primary); font-size: 0.65rem; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        header { background: var(--primary); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .logo-area { display: flex; align-items: center; gap: 8px; }
+        .logo img { height: 35px; width: 35px; border-radius: 50%; border: 2px solid white; object-fit: cover; } 
+        .brand-text { display: flex; flex-direction: column; }
+        .brand-name { font-weight: 700; font-size: 1rem; line-height: 1.1; }
+
+        .icon-btn { background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer; position: relative; margin-left: 10px; }
+        .badge { position: absolute; top: -5px; right: -5px; background: white; color: var(--primary); font-size: 0.6rem; font-weight: bold; width: 15px; height: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
         /* SEARCH & FILTER */
-        .search-wrap { padding: 10px 15px; background: white; position: sticky; top: 56px; z-index: 90; }
-        .search-input { width: 100%; padding: 10px 20px; border: 1px solid #ddd; border-radius: 50px; background: #f1f5f9; outline: none; box-sizing: border-box; font-size: 0.9rem; }
+        .search-wrap { padding: 10px 15px; background: white; position: sticky; top: 55px; z-index: 90; }
+        .search-input { width: 100%; padding: 10px 20px; border: 1px solid #e2e8f0; border-radius: 50px; background: #f1f5f9; outline: none; box-sizing: border-box; font-size: 0.9rem; }
 
         .tabs { display: flex; gap: 8px; padding: 10px 15px; overflow-x: auto; scrollbar-width: none; background: white; border-bottom: 1px solid #eee; }
-        .tab-btn { padding: 6px 16px; border: 1px solid #ddd; background: white; border-radius: 30px; font-size: 0.85rem; color: #666; white-space: nowrap; cursor: pointer; transition: 0.2s; }
+        .tab-btn { padding: 6px 16px; border: 1px solid #e2e8f0; background: white; border-radius: 30px; font-size: 0.85rem; color: #64748b; white-space: nowrap; cursor: pointer; transition: 0.2s; font-weight: 500; }
         .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         .sub-cat-row { display: flex; gap: 8px; padding: 8px 15px; overflow-x: auto; scrollbar-width: none; background: #f1f5f9; display: none; }
-        .sub-chip { background: white; border: 1px solid #ddd; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; color: #555; white-space: nowrap; cursor: pointer; }
-        .sub-chip.active { background: #333; color: white; border-color: #333; }
+        .sub-chip { background: white; border: 1px solid #cbd5e1; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; color: #475569; white-space: nowrap; cursor: pointer; }
+        .sub-chip.active { background: #334155; color: white; border-color: #334155; }
 
         .filter-options { display: flex; gap: 10px; padding: 10px 15px; overflow-x: auto; background: var(--light); }
-        .filter-select { padding: 6px; border-radius: 6px; border: 1px solid #ddd; background: white; font-size: 0.8rem; outline: none; }
+        .filter-select { padding: 6px; border-radius: 6px; border: 1px solid #ddd; background: white; font-size: 0.8rem; outline: none; color: #475569; }
 
-        /* HERO & GRID (Mobile Friendly 2-Column) */
-        .hero-slider { height: 200px; margin: 10px 15px; border-radius: 12px; overflow: hidden; position: relative; background: #ddd; display: none; }
+        /* HERO & GRID */
+        .hero-slider { height: 200px; margin: 10px 15px; border-radius: 12px; overflow: hidden; position: relative; display: none; background: #ddd; }
         .slide { position: absolute; inset: 0; opacity: 0; transition: 0.5s; display: flex; align-items: center; justify-content: center; }
         .slide.active { opacity: 1; }
         .slide img { width: 100%; height: 100%; object-fit: cover; }
@@ -44,53 +47,70 @@
         .cat-media { width: 100%; height: 100%; object-fit: cover; }
         .cat-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.75rem; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 10px; padding: 10px 15px; } 
-        .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; position: relative; }
-        .card img { width: 100%; height: 180px; object-fit: cover; }
-        .wish-icon { position: absolute; top: 8px; right: 8px; background: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; z-index: 5; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; padding: 15px; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; cursor: pointer; transition: 0.3s; }
+        .card-img-wrap { position: relative; height: 200px; }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
+        .wish-icon { position: absolute; top: 8px; right: 8px; background: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 5; transition: 0.2s; }
         .wish-icon.active { color: var(--primary); }
         .badge-img { position: absolute; top: 8px; left: 8px; width: 30px; z-index: 5; }
         
         .info { padding: 10px; }
         .title { font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-        .price { font-weight: 700; font-size: 1rem; color: #333; }
+        .price { font-weight: 700; font-size: 1rem; }
         .btn-view { width: 100%; padding: 6px; background: var(--primary); color: white; border: none; border-radius: 4px; margin-top: 5px; cursor: pointer; font-size: 0.85rem; }
 
         /* MODALS */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; }
-        .modal-box { background: white; width: 92%; max-width: 500px; max-height: 92vh; border-radius: 15px; overflow-y: auto; padding: 20px; position: relative; }
-        .btn-full { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; font-weight: 600; border-radius: 8px; margin-top: 15px; font-size: 1rem; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-box { background: white; width: 90%; max-width: 500px; max-height: 90vh; border-radius: 15px; overflow-y: auto; padding: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; }
+        .btn-full { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; font-weight: 600; font-size: 0.95rem; cursor: pointer; border-radius: 8px; margin-top: 10px; }
 
-        /* LOGIN */
-        .login-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; }
+        /* LOGIN INPUTS */
+        #loginModal { z-index: 9999; }
+        .login-input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; font-size: 1rem; box-sizing: border-box; }
+        .login-input:focus { border-color: var(--primary); outline: none; }
 
-        /* ANIMATION */
-        .theme-particle { position: fixed; top: -10%; z-index: 9999; animation: fall linear forwards; font-size: 20px; pointer-events: none; }
-        @keyframes fall { 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+        /* ADDRESS FORM */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 4px; display: block; }
+        .form-input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.9rem; box-sizing: border-box; }
         
         /* GALLERY */
-        .gallery-box { position: relative; height: 260px; background: #f9f9f9; border-radius: 8px; margin-bottom: 10px; }
-        .gal-img { width: 100%; height: 100%; object-fit: contain; }
-        .arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.3); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .arrow.left { left: 10px; } .arrow.right { right: 10px; }
-        .thumbs { display: flex; gap: 5px; justify-content: center; margin-bottom: 10px; }
-        .t-img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; border: 2px solid transparent; }
-        .t-img.active { border-color: var(--primary); }
+        .pv-gallery { position: relative; width: 100%; height: 220px; background: #f9f9f9; border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+        .pv-main-img { width: 100%; height: 100%; object-fit: contain; }
+        .pv-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.3); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; z-index: 10; }
+        .pv-arrow.left { left: 8px; }
+        .pv-arrow.right { right: 8px; }
+        .thumb-row { display: flex; gap: 6px; justify-content: center; margin-bottom: 10px; }
+        .thumb { width: 45px; height: 45px; border-radius: 6px; border: 2px solid transparent; object-fit: cover; cursor: pointer; }
+        .thumb.active { border-color: var(--primary); }
 
-        /* --- COMPACT SIMILAR ITEMS (SMALL SIZE) --- */
-        .similar-row { display: flex; gap: 8px; overflow-x: auto; margin-top: 5px; padding-bottom: 5px; scrollbar-width: none; }
-        .sim-card { min-width: 70px; width: 70px; cursor: pointer; flex-shrink: 0; }
-        .sim-card img { width: 100%; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid #eee; }
+        /* SIMILAR & REVIEWS */
+        .similar-row { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; padding-bottom: 5px; scrollbar-width: none; }
+        .sim-card { min-width: 80px; width: 80px; cursor: pointer; flex-shrink: 0; }
+        .sim-card img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid #eee; }
 
-        /* SHARE BUTTON */
+        .review-box { margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee; }
+        .review-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.85rem; }
+
+        /* ANIMATION */
+        .theme-particle { position: fixed; top: -10%; user-select: none; pointer-events: none; z-index: 4000; animation: fall linear forwards; opacity: 0.9; }
+        @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+        
+        /* TRACKING */
+        .track-item { border: 1px solid #eee; border-radius: 8px; padding: 12px; margin-bottom: 10px; background: white; }
+        .track-status { font-weight: bold; color: var(--primary); margin-top: 5px; font-size: 0.85rem; }
+        
+        /* LOADER */
+        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 8000; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: bold; display: none; }
+    
+        /* CART TOTALS */
+        .bill-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; }
+        .bill-total { border-top: 1px dashed #ccc; padding-top: 10px; font-weight: bold; font-size: 1.1rem; margin-top: 10px; }
         .share-btn { position: absolute; top: 10px; right: 50px; background: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; color: #333; z-index: 20; font-size: 1.2rem; }
 
-        /* CART BILL */
-        .bill-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
-        .bill-total { border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 10px; font-weight: bold; font-size: 1.1rem; text-align: right; }
-
         /* FOOTER */
-        footer { background: #fff; padding: 20px; text-align: center; margin-top: 30px; font-size: 0.85rem; color: #666; border-top: 1px solid #eee; }
+        footer { background: #fff; padding: 20px; text-align: center; margin-top: 30px; border-top: 1px solid #eee; color: #64748b; font-size: 0.8rem; }
         .footer-link { color: var(--primary); font-weight: 600; text-decoration: none; margin: 0 5px; cursor: pointer; }
     </style>
 </head>
@@ -98,33 +118,38 @@
 
     <div id="loginModal" class="modal" style="display: flex;">
         <div class="modal-box" style="text-align: center;">
-            <h2 style="color:var(--primary);">Welcome to Jija Studio</h2>
-            <p style="color:#666; margin-bottom:20px;">Enter details to enter shop</p>
-            <input id="loginName" class="login-input" placeholder="Your Name">
-            <input id="loginPhone" class="login-input" type="tel" placeholder="Mobile Number">
+            <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 10px;"><i class="ri-user-heart-line"></i></div>
+            <h2 style="margin: 0 0 5px;">Welcome to Jija Studio</h2>
+            <p style="color: #64748b; margin-bottom: 25px; font-size: 0.9rem;">Enter your details to start shopping</p>
+            
+            <input id="loginName" class="login-input" placeholder="Your Full Name">
+            <input id="loginPhone" class="login-input" type="tel" placeholder="Mobile Number (10 digits)">
+            
             <button class="btn-full" onclick="doLogin()">Enter Shop</button>
         </div>
     </div>
 
     <header>
-        <div class="logo">
+        <div class="logo-area">
             <img src="logo.jpg" onerror="this.src='https://via.placeholder.com/50?text=Logo'">
-            Jija Studio
+            <div class="brand-text">
+                <div class="brand-name">Jija Studio</div>
+            </div>
         </div>
-        <div class="icon-group">
-            <i class="ri-instagram-line icon-btn" onclick="window.open('https://www.instagram.com/jija_studio_1?igsh=MXIxMXVpMms0NzliZw==', '_blank')" style="font-size:1.5rem;"></i>
+        <div>
+            <i class="ri-instagram-line icon-btn" onclick="window.open('https://www.instagram.com/jija_studio_1?igsh=MXIxMXVpMms0NzliZw==', '_blank')" style="font-size:1.4rem;"></i>
             <button class="icon-btn" onclick="openWishlist()">
                 <i class="ri-heart-3-line"></i> <span class="badge" id="wCount">0</span>
             </button>
             <button class="icon-btn" onclick="openCart()">
                 <i class="ri-shopping-cart-line"></i> <span class="badge" id="cCount">0</span>
             </button>
-            <button class="icon-btn" onclick="openOrders()" style="font-size:1.1rem; margin-left:10px;">📦</button>
+            <button class="icon-btn" onclick="openMyOrders()" style="font-size:1rem; margin-left:10px;">📦 Orders</button>
         </div>
     </header>
 
     <div class="search-wrap">
-        <input class="search-input" id="searchBox" placeholder="Search products..." oninput="applyFilters()">
+        <input class="search-input" id="searchBox" placeholder="🔍 Search products..." oninput="applyFilters()">
     </div>
 
     <div class="tabs">
@@ -151,7 +176,7 @@
             <option value="high">Price: High to Low</option>
         </select>
         <select id="sizeFilter" class="filter-select" style="display:none;" onchange="applyFilters()">
-            <option value="all">📏 Size</option>
+            <option value="all">📏 All Sizes</option>
         </select>
     </div>
 
@@ -162,7 +187,6 @@
     <div id="productView" class="modal">
         <div class="modal-box" style="padding:15px;">
             <span onclick="document.getElementById('productView').style.display='none'" style="position:absolute; right:15px; top:10px; font-size:1.8rem; cursor:pointer; z-index:30;">&times;</span>
-            
             <div class="share-btn" onclick="shareProduct()"><i class="ri-share-forward-line"></i></div>
 
             <div class="gallery-box">
@@ -171,20 +195,22 @@
                 <div class="arrow right" onclick="moveImg(1)">&#10095;</div>
             </div>
             <div class="thumbs" id="pvThumbs"></div>
+            
+            <div id="pvVideoBox" style="display:none; padding-bottom:10px;"><iframe id="pvVideo" width="100%" height="200" frameborder="0"></iframe></div>
 
-            <div style="padding:0 5px;">
-                <h3 id="pvTitle" style="margin:0 0 5px; font-size:1.1rem; line-height:1.3;"></h3>
-                <div id="pvPrice" style="color:var(--primary); font-weight:bold; font-size:1.2rem;"></div>
+            <div style="padding:0 5px 10px;">
+                <h2 id="pvTitle" style="margin:0 0 4px; font-size:1.2rem;"></h2>
+                <div style="font-size:1.1rem; font-weight:700; color:var(--primary);"><span id="pvPrice"></span></div>
                 <select id="pvSize" style="width:100%; padding:8px; margin-top:8px; border-radius:6px; border:1px solid #ddd; font-size:0.9rem;"></select>
-                <div id="pvStock" style="font-size:0.8rem; margin-top:5px; font-weight:bold; color:green;"></div>
-                <p id="pvDesc" style="color:#555; font-size:0.85rem; line-height:1.4; margin:8px 0;"></p>
+                <div id="pvStock" style="font-size:0.8rem; margin-top:4px; font-weight:600;"></div>
+                <p id="pvDesc" style="color:#666; font-size:0.85rem; line-height:1.4; margin-top:8px;"></p>
             </div>
 
             <div style="font-weight:600; font-size:0.85rem; margin-top:10px; color:#666;">Similar Items</div>
             <div id="similarRow" class="similar-row"></div>
 
-            <div style="border-top:1px solid #eee; margin-top:10px; padding-top:10px;">
-                <div style="font-weight:600; font-size:0.85rem; margin-bottom:5px;">Reviews</div>
+            <div class="review-box">
+                <div style="font-weight:600; margin-bottom:8px; font-size:0.9rem;">Reviews</div>
                 <div id="reviewList" style="max-height:80px; overflow-y:auto; margin-bottom:5px; font-size:0.8rem;"></div>
                 <div style="display:flex; gap:5px;">
                     <input id="revText" placeholder="Review..." style="flex:1; padding:6px; border:1px solid #ddd; border-radius:4px; font-size:0.85rem;">
@@ -199,55 +225,75 @@
     <div id="cartModal" class="modal">
         <div class="modal-box">
             <h3>Cart</h3>
-            <div id="cartList"></div>
-            
-            <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-top:15px; border:1px dashed #ccc;">
-                <div class="bill-row"><span>Subtotal</span><span id="cartSub">₹0</span></div>
-                <div class="bill-row"><span>Delivery Charge (₹40/item)</span><span id="cartDel">₹0</span></div>
-                <div class="bill-total">Total: ₹<span id="cartTotal">0</span></div>
+            <div style="background:#fff3cd; color:#856404; padding:10px; border-radius:5px; margin-bottom:10px; font-size:0.8rem; text-align:center;">
+                ⚠️ <strong>Note:</strong> No Return Policy Available.
             </div>
-
-            <button class="btn-full" onclick="openCheckout()">Checkout</button>
-            <button onclick="document.getElementById('cartModal').style.display='none'" style="width:100%; padding:10px; background:none; border:none; margin-top:5px;">Close</button>
+            
+            <div id="cartList" style="min-height:100px;"></div>
+            
+            <div style="background:#f8fafc; padding:15px; border-radius:8px; margin-top:15px; border:1px dashed #cbd5e1;">
+                <div class="bill-row"><span>Subtotal</span><span id="cartSub">₹0</span></div>
+                <div class="bill-row" style="color:var(--green);"><span>Delivery (₹40/item)</span><span id="cartDel">₹0</span></div>
+                <div class="bill-total">Total Amount: ₹<span id="cartTotal">0</span></div>
+            </div>
+            
+            <button class="btn-full" onclick="openCheckout()">PROCEED TO CHECKOUT</button>
+            <button onclick="document.getElementById('cartModal').style.display='none'" style="width:100%; padding:12px; background:none; border:none; margin-top:5px; color:#64748b; font-weight:600;">Close Cart</button>
         </div>
     </div>
 
     <div id="checkoutModal" class="modal">
         <div class="modal-box">
-            <h3>Shipping Details</h3>
-            <input value="India 🇮🇳" disabled class="login-input">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <select id="addrState" class="login-input"><option>Maharashtra</option><option>Karnataka</option><option>Gujarat</option><option>Delhi</option></select>
-                <input id="addrDist" placeholder="District" class="login-input">
+            <h3 style="margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">Shipping Details</h3>
+            
+            <div class="form-grid">
+                <div><label class="form-label">Country</label><input class="form-input" value="India 🇮🇳" disabled></div>
+                <div><label class="form-label">State</label><input id="addrState" placeholder="Enter State" class="form-input"></div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <input id="addrTaluka" placeholder="Taluka" class="login-input">
-                <input id="addrPin" placeholder="Pincode" class="login-input">
+
+            <div class="form-grid">
+                <div><label class="form-label">District</label><input class="form-input" id="addrDist" placeholder="District"></div>
+                <div><label class="form-label">Taluka</label><input class="form-input" id="addrTaluka" placeholder="Taluka"></div>
             </div>
-            <input id="addrCity" placeholder="City/Village" class="login-input">
-            <textarea id="addrLocal" placeholder="House No, Landmark" rows="2" class="login-input"></textarea>
-            <button class="btn-full" onclick="placeOrder()">Place Order on WhatsApp</button>
-            <button onclick="document.getElementById('checkoutModal').style.display='none'" style="width:100%; padding:10px; background:none; border:none; margin-top:5px;">Cancel</button>
+
+            <div class="form-grid">
+                <div><label class="form-label">Pincode</label><input class="form-input" id="addrPin" type="number" placeholder="6-digit Pin"></div>
+                <div><label class="form-label">City/Village</label><input class="form-input" id="addrCity" placeholder="Village/City"></div>
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <label class="form-label">Flat / House / Landmark</label>
+                <textarea class="form-input" id="addrLocal" rows="2" placeholder="Near Temple, Road No..."></textarea>
+            </div>
+
+            <button class="btn-full" style="background:#25D366;" onclick="placeOrder()"><i class="ri-whatsapp-line"></i> PLACE ORDER ON WHATSAPP</button>
+            <button onclick="document.getElementById('checkoutModal').style.display='none'" style="width:100%; padding:10px; background:none; border:none; margin-top:5px; color:#64748b;">Cancel</button>
         </div>
     </div>
 
     <div id="aboutModal" class="modal">
         <div class="modal-box">
-            <span onclick="document.getElementById('aboutModal').style.display='none'" style="float:right; font-size:1.5rem; cursor:pointer;">&times;</span>
-            <h2 style="color:var(--primary); text-align:center; margin-bottom:10px;">About Jija Studio</h2>
+            <span onclick="document.getElementById('aboutModal').style.display='none'" style="float:right; font-size:1.8rem; cursor:pointer;">&times;</span>
+            <div style="text-align:center; margin-bottom:20px;">
+                <img src="logo.jpg" onerror="this.src='https://via.placeholder.com/60?text=Logo'" style="width:60px; height:60px; border-radius:50%; margin-bottom:10px;">
+                <h2 style="color:var(--primary); margin:0;">About Jija Studio</h2>
+            </div>
             
-            <div style="text-align:left; color:#555; line-height:1.6; font-size:0.9rem;">
-                <p><strong><i class="ri-map-pin-line"></i> Address:</strong><br>
-                M.G College Road, Umbraj<br>Yashlakshmi Complex, Second Floor</p>
-                <hr style="border:0; border-top:1px solid #eee; margin:10px 0;">
+            <div style="background:#f8fafc; padding:20px; border-radius:12px; border:1px solid #e2e8f0; font-size:0.95rem; color:#334155; line-height:1.6;">
+                <div style="margin-bottom:15px;">
+                    <strong style="color:var(--dark); display:block; margin-bottom:5px;"><i class="ri-map-pin-2-line"></i> Visit Us:</strong>
+                    M.G College Road, Umbraj<br>
+                    Yashlakshmi Complex, Second Floor
+                </div>
                 
-                <p><strong><i class="ri-time-line"></i> Store Timings:</strong><br>
-                9:30 AM - 8:30 PM</p>
-                <hr style="border:0; border-top:1px solid #eee; margin:10px 0;">
-                
-                <p style="color:#d32f2f; font-weight:600; background:#ffebee; padding:10px; border-radius:5px; text-align:center;">
-                    🚫 No Return Policy Available
-                </p>
+                <div style="margin-bottom:15px;">
+                    <strong style="color:var(--dark); display:block; margin-bottom:5px;"><i class="ri-time-line"></i> Opening Hours:</strong>
+                    9:30 AM to 8:30 PM (Daily)
+                </div>
+
+                <div style="text-align:center; color:#b91c1c; background:#fef2f2; padding:12px; border-radius:8px; font-weight:600; border:1px solid #fecaca;">
+                    <i class="ri-error-warning-line"></i> Note: No Return Policy Available
+                </div>
             </div>
         </div>
     </div>
@@ -262,7 +308,7 @@
 
     <div id="wishModal" class="modal">
         <div class="modal-box">
-            <h3>Wishlist</h3>
+            <h3>My Wishlist ❤️</h3>
             <div id="wishListContainer"></div>
             <button onclick="document.getElementById('wishModal').style.display='none'" class="btn-full" style="background:#333;">Close</button>
         </div>
@@ -271,21 +317,26 @@
     <footer>
         <p>
             <span class="footer-link" onclick="document.getElementById('aboutModal').style.display='flex'">About Us</span> | 
-            <span class="footer-link" onclick="document.getElementById('aboutModal').style.display='flex'">Contact & Address</span>
+            <span class="footer-link" onclick="document.getElementById('aboutModal').style.display='flex'">Store Address</span> |
+            <span class="footer-link" onclick="document.getElementById('aboutModal').style.display='flex'">Policy</span>
         </p>
-        <p style="margin-top:5px;">© 2025 Jija Studio</p>
+        <p style="margin-top:10px; opacity:0.8;">© 2025 Jija Studio. All rights reserved.</p>
     </footer>
+
+    <div id="loader">Processing...</div>
 
     <script>
         const DB_URL = "https://jija-studio-default-rtdb.firebaseio.com/jijaData.json";
         const ORDERS_URL = "https://jija-studio-default-rtdb.firebaseio.com/orders.json";
         const ADMIN_PHONE = "918830903621";
+        const SHIPPING_PER_ITEM = 40; 
         
         let appData = { products: [], catBanners: [], subCategories: {}, settings: {theme:'default'} };
         let cart = [], wishlist = JSON.parse(localStorage.getItem('jijaWish')) || [];
         let user = JSON.parse(localStorage.getItem('jijaUser'));
         let curProd=null, imgs=[], imgIdx=0;
         const SIZES = { cloth: ["S","M","L","XL","XXL"], kids: ["0-1Y","2-3Y","4-5Y"], footwear: [6,7,8,9,10], jewelry: ["Free Size"] };
+        let currentCat = 'all', currentSub = 'all';
 
         window.onload = async () => {
             if(user) document.getElementById('loginModal').style.display='none';
@@ -294,10 +345,11 @@
             if(d) {
                 appData = d;
                 if(!appData.products) appData.products=[];
+                if(!appData.reviews) appData.reviews=[];
                 if(!appData.catBanners) appData.catBanners=[];
-                if(!appData.settings) appData.settings={theme:'default'};
-                if(Array.isArray(appData.subCategories)) appData.subCategories = { cloth:appData.subCategories, kids:["Boys"], footwear:["Shoes"], jewelry:["Necklace"], toy:["Cars"] };
-                
+                if (Array.isArray(appData.subCategories)) {
+                    appData.subCategories = { cloth: appData.subCategories, kids: ["Boys"], footwear: ["Shoes"], jewelry: ["Necklace"], toy: ["Cars"] };
+                }
                 applyTheme(appData.settings.theme);
                 renderHome();
                 initSlider();
@@ -330,7 +382,7 @@
             else if(t==='holi') { r.setProperty('--primary', '#9333ea'); s=['🟣','🟡']; }
             else if(t==='valentine') { r.setProperty('--primary', '#e11d48'); s=['❤️','💖']; }
             else if(t==='newyear') { r.setProperty('--primary', '#0f172a'); s=['🎉','🥂']; }
-            else r.setProperty('--primary', '#D81B60');
+            else { r.setProperty('--primary', '#D81B60'); }
             
             if(s.length) startRain(s);
         }
@@ -349,7 +401,8 @@
 
         function renderHome() {
             document.getElementById('catBanners').innerHTML = appData.catBanners.map(b => {
-                return `<div class="cat-card" onclick="alert('Filter: ${b.sub}')"><img src="${b.media}" class="cat-media"><div class="cat-overlay">${b.sub}</div></div>`;
+                const media = b.type === 'vid' ? `<video src="${b.media}" class="cat-media" autoplay muted loop playsinline></video>` : `<img src="${b.media}" class="cat-media">`;
+                return `<div class="cat-card" onclick="alert('Filtered: ${b.sub}')">${media}<div class="cat-overlay">${b.sub}</div></div>`;
             }).join('');
             applyFilters();
         }
@@ -367,8 +420,31 @@
             let list = appData.products || [];
             const q = document.getElementById('searchBox').value.toLowerCase();
             if(q) list = list.filter(p => p.name.toLowerCase().includes(q));
-            // Add Category/Filter logic here...
             
+            if(currentCat!=='all') list = list.filter(p => p.cat === currentCat);
+            if(currentSub!=='all') list = list.filter(p => p.subCats && p.subCats.includes(currentSub));
+
+            const budget = document.getElementById('budgetFilter').value;
+            if(budget !== 'all') {
+                list = list.filter(p => {
+                    const price = parseInt(p.price);
+                    if(budget === '500') return price < 500;
+                    if(budget === '1000') return price >= 500 && price <= 1000;
+                    if(budget === 'high') return price > 1000;
+                    return true;
+                });
+            }
+
+            const sizeVal = document.getElementById('sizeFilter').value;
+            if(sizeVal !== 'all' && document.getElementById('sizeFilter').style.display !== 'none') {
+                list = list.filter(p => p.stock && p.stock[sizeVal] > 0);
+            }
+
+            const sort = document.getElementById('sortSelect').value;
+            if(sort === 'low') list.sort((a,b) => a.price - b.price);
+            else if(sort === 'high') list.sort((a,b) => b.price - a.price);
+            else list.sort((a,b) => (a.rank||100) - (b.rank||100));
+
             document.getElementById('grid').innerHTML = list.map(p => {
                 const w = wishlist.includes(p.id) ? 'active' : '';
                 return `<div class="card">
@@ -382,67 +458,115 @@
             }).join('');
         }
 
-        // --- SHARE PRODUCT ---
-        function shareProduct() {
-            const url = window.location.origin + window.location.pathname + '?id=' + curProd.id;
-            if (navigator.share) {
-                navigator.share({ title: curProd.name, text: 'Check this out on Jija Studio!', url: url });
+        function setCat(cat, btn) {
+            currentCat = cat; currentSub = 'all';
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const subRow = document.getElementById('subCatRow');
+            const subs = appData.subCategories[cat] || [];
+            
+            if(subs.length > 0) {
+                subRow.style.display = 'flex';
+                subRow.innerHTML = `<div class="sub-chip active" onclick="filterSub('all', this)">All</div>` + 
+                    subs.map(s => `<div class="sub-chip" onclick="filterSub('${s}', this)">${s}</div>`).join('');
             } else {
-                navigator.clipboard.writeText(url);
-                alert('Link copied to clipboard!');
+                subRow.style.display = 'none';
             }
+
+            const sf = document.getElementById('sizeFilter');
+            const sizes = SIZES[cat];
+            if(sizes) {
+                sf.style.display = 'block';
+                sf.innerHTML = '<option value="all">📏 All Sizes</option>' + sizes.map(s => `<option value="${s}">${s}</option>`).join('');
+            } else sf.style.display = 'none';
+
+            applyFilters();
         }
 
+        function filterSub(sub, btn) {
+            currentSub = sub;
+            document.querySelectorAll('.sub-chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            applyFilters();
+        }
+
+        // --- EXPOSE OPENPROD TO WINDOW ---
         function openProd(id) {
-            curProd = appData.products.find(p=>p.id==id);
-            if(!curProd) return;
+            curProd = appData.products.find(p => p.id == id);
+            if (!curProd) return;
+            
             imgs = [curProd.img];
             if(curProd.img2) imgs.push(curProd.img2);
             if(curProd.img3) imgs.push(curProd.img3);
-            imgIdx=0; updateGal();
+            imgIdx = 0;
 
-            document.getElementById('pvTitle').innerText=curProd.name;
-            document.getElementById('pvPrice').innerText='₹'+curProd.price;
-            document.getElementById('pvDesc').innerText=curProd.desc||"";
+            updateGallery();
+
+            document.getElementById('pvTitle').innerText = curProd.name;
+            document.getElementById('pvPrice').innerText = '₹' + curProd.price;
+            document.getElementById('pvDesc').innerText = curProd.desc || "";
             
+            const vBox = document.getElementById('pvVideoBox');
+            if(curProd.video && curProd.video.includes('embed')) {
+                vBox.style.display = 'block';
+                document.getElementById('pvVideo').src = curProd.video;
+            } else vBox.style.display = 'none';
+
             const sel = document.getElementById('pvSize');
             sel.innerHTML = '<option value="">Select Size</option>';
-            if(curProd.stock) for(let [s,q] of Object.entries(curProd.stock)) if(q>0) sel.innerHTML+=`<option value="${s}">Size ${s}</option>`;
+            if(curProd.stock) {
+                for(let [s, q] of Object.entries(curProd.stock)) {
+                    if(q > 0) sel.innerHTML += `<option value="${s}">Size ${s}</option>`;
+                }
+            }
 
-            // Compact Similar Items
-            const sims = appData.products.filter(p=>p.cat===curProd.cat && p.id!=curProd.id).slice(0,5);
-            document.getElementById('similarRow').innerHTML = sims.map(p=>`<div class="sim-card" onclick="openProd(${p.id})"><img src="${p.img}"></div>`).join('');
+            const sims = appData.products.filter(p => p.cat === curProd.cat && p.id != curProd.id).slice(0,5);
+            document.getElementById('similarRow').innerHTML = sims.map(p => `<div class="sim-card" onclick="openProd(${p.id})"><img src="${p.img}"></div>`).join('');
 
-            // Reviews
-            const revs = (appData.reviews||[]).filter(r=>r.pid==curProd.id);
-            document.getElementById('reviewList').innerHTML = revs.length ? revs.map(r=>`<div style="font-size:0.8rem; margin-bottom:5px;"><b>${r.user}:</b> ${r.text}</div>`).join('') : "<small>No reviews</small>";
-
-            document.getElementById('productView').style.display='flex';
+            renderReviews();
+            document.getElementById('productView').style.display = 'flex';
         }
 
-        function updateGal() {
-            document.getElementById('pvImg').src=imgs[imgIdx];
-            document.getElementById('pvThumbs').innerHTML = imgs.map((u,i)=>`<img src="${u}" class="t-img ${i==imgIdx?'active':''}" onclick="setGal(${i})">`).join('');
+        function updateGallery() {
+            document.getElementById('pvImg').src = imgs[imgIdx];
+            document.getElementById('pvThumbs').innerHTML = imgs.map((src, i) => 
+                `<img src="${src}" class="thumb ${i === imgIdx ? 'active' : ''}" onclick="setGallery(${i})">`
+            ).join('');
         }
-        function moveImg(n) { imgIdx+=n; if(imgIdx>=imgs.length)imgIdx=0; if(imgIdx<0)imgIdx=imgs.length-1; updateGal(); }
-        function setGal(i) { imgIdx=i; updateGal(); }
+
+        function moveImg(n) {
+            imgIdx += n;
+            if(imgIdx >= imgs.length) imgIdx = 0;
+            if(imgIdx < 0) imgIdx = imgs.length - 1;
+            updateGallery();
+        }
+
+        function setGallery(idx) {
+            imgIdx = idx;
+            updateGallery();
+        }
+
+        function renderReviews() {
+            const revs = appData.reviews.filter(r => r.pid === curProd.id);
+            const list = document.getElementById('reviewList');
+            list.innerHTML = revs.length ? revs.map(r => `<div class="review-item"><strong>${r.user}</strong>: ${r.text}</div>`).join('') : "<div style='color:#999; font-size:0.85rem;'>No reviews yet.</div>";
+        }
 
         async function addReview() {
             const txt = document.getElementById('revText').value;
-            if(txt) {
-                if(!appData.reviews) appData.reviews=[];
-                appData.reviews.push({pid:curProd.id, user:user.name, text:txt});
-                await fetch(DB_URL,{method:'PUT',body:JSON.stringify(appData)});
-                document.getElementById('revText').value="";
-                openProd(curProd.id); 
-            }
+            if(!txt) return;
+            appData.reviews.push({ pid: curProd.id, user: user.name, text: txt });
+            await fetch(DB_URL, { method: "PUT", body: JSON.stringify(appData) });
+            document.getElementById('revText').value="";
+            renderReviews();
         }
 
         function addToCart() {
             const sz = document.getElementById('pvSize').value;
             if(!sz) return alert("Select Size");
             cart.push({...curProd, size:sz, qty:1});
-            document.getElementById('cCount').innerText=cart.length;
+            document.getElementById('cCount').innerText = cart.length;
             document.getElementById('productView').style.display='none';
             alert("Added!");
         }
@@ -453,7 +577,7 @@
             localStorage.setItem('jijaWish', JSON.stringify(wishlist));
             updateWishIcon();
         }
-        function updateWishIcon() { document.getElementById('wCount').innerText=wishlist.length; }
+        function updateWishIcon() { document.getElementById('wCount').innerText = wishlist.length; }
         
         function openWishlist() {
             const list = document.getElementById('wishListContainer');
@@ -466,47 +590,70 @@
         }
 
         function openCart() {
-            if(!cart.length) return alert("Cart Empty");
-            document.getElementById('cartList').innerHTML = cart.map((i, idx)=>`
-                <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:5px 0;">
-                    <div>${i.name} (${i.size})</div>
-                    <div>₹${i.price} <i class="ri-close-circle-fill" style="color:red; cursor:pointer;" onclick="removeItem(${idx})"></i></div>
-                </div>
-            `).join('');
+            const list = document.getElementById('cartList');
+            let total = 0;
+            let totalItems = 0;
             
-            // --- BILLING LOGIC ---
-            let subtotal = cart.reduce((a,b)=>a+parseInt(b.price),0);
-            let delivery = cart.length * 40; // ₹40 per item
-            
-            document.getElementById('cartSub').innerText = '₹'+subtotal;
-            document.getElementById('cartDel').innerText = '₹'+delivery;
-            document.getElementById('cartTotal').innerText = subtotal + delivery;
-            
+            list.innerHTML = cart.map((i, idx) => { 
+                total += parseInt(i.price);
+                totalItems++;
+                return `
+                <div style="display:flex; gap:10px; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px; align-items:center;">
+                    <img src="${i.img}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
+                    <div style="flex:1;">
+                        <div style="font-weight:600; font-size:0.9rem;">${i.name}</div>
+                        <div style="font-size:0.8rem; color:#666;">Size: ${i.size}</div>
+                    </div>
+                    <div style="font-weight:700;">₹${i.price}</div>
+                    <button onclick="removeFromCart(${idx})" style="border:none; background:none; color:red; margin-left:5px;">&times;</button>
+                </div>`; 
+            }).join('');
+
+            const delivery = totalItems * SHIPPING_PER_ITEM;
+            document.getElementById('cartSub').innerText = '₹' + total;
+            document.getElementById('cartDel').innerText = '+ ₹' + delivery;
+            document.getElementById('cartTotal').innerText = total + delivery;
             document.getElementById('cartModal').style.display='flex';
         }
-        
-        function removeItem(idx) {
+
+        function removeFromCart(idx) {
             cart.splice(idx, 1);
+            openCart();
             document.getElementById('cCount').innerText = cart.length;
-            if(cart.length === 0) document.getElementById('cartModal').style.display='none';
-            else openCart();
         }
-        
+
         function openCheckout() {
-            document.getElementById('cartModal').style.display='none';
-            document.getElementById('checkoutModal').style.display='flex';
+            if(cart.length === 0) return alert("Cart empty");
+            document.getElementById('cartModal').style.display = 'none';
+            document.getElementById('checkoutModal').style.display = 'flex';
         }
 
         async function placeOrder() {
-            const addr = document.getElementById('addrLocal').value;
-            if(!addr) return alert("Enter Address");
-            const fullAddr = `${addr}, ${document.getElementById('addrCity').value}, ${document.getElementById('addrDist').value}`;
-            
+            const state = document.getElementById('addrState').value;
+            const dist = document.getElementById('addrDist').value;
+            const taluka = document.getElementById('addrTaluka').value;
+            const pin = document.getElementById('addrPin').value;
+            const city = document.getElementById('addrCity').value;
+            const local = document.getElementById('addrLocal').value;
+
+            if(!state || !dist || !taluka || !pin || !city || !local) return alert("Fill all fields");
+
+            const fullAddr = `${local}\n${city}, ${taluka}\n${dist}, ${state} - ${pin}`;
             const totalAmount = document.getElementById('cartTotal').innerText;
-            const order = { date: new Date().toISOString(), user: user, address: {city:fullAddr}, cart:cart, total:totalAmount, status: "Ordered" };
+
+            const order = {
+                date: new Date().toISOString(),
+                user: user,
+                address: { city: fullAddr },
+                cart: cart,
+                total: totalAmount,
+                txnId: "Direct-WA",
+                status: "Ordered"
+            };
+
             await fetch(ORDERS_URL, { method: "POST", body: JSON.stringify(order) });
-            
-            let msg = `*NEW ORDER*\nUser: ${user.name}\nAddr: ${fullAddr}\nItems:\n` + cart.map(i=>`- ${i.name} (${i.size})`).join('\n') + `\nTotal with Delivery: ₹${totalAmount}`;
+
+            let msg = `*NEW ORDER*\nUser: ${user.name}\nAddr: ${fullAddr}\nItems:\n` + cart.map(i=>`- ${i.name} (${i.size})`).join('\n') + `\nTotal: ₹${totalAmount}`;
             window.open(`https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(msg)}`);
             
             cart=[]; document.getElementById('cCount').innerText=0;
@@ -514,29 +661,33 @@
             alert("Order Placed!");
         }
 
-        async function openOrders() {
+        async function openMyOrders() {
             const r = await fetch(ORDERS_URL);
             const d = await r.json();
             const list = document.getElementById('myOrdersList');
             list.innerHTML = "";
-            if(!d) { list.innerHTML = "No orders"; return; }
-            Object.values(d).filter(o=>o.user.phone===user.phone).forEach(o=>{
-                list.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:5px; border-radius:5px;"><div style="display:flex; justify-content:space-between;"><b>${new Date(o.date).toLocaleDateString()}</b><b>₹${o.total}</b></div><div style="color:var(--primary)">${o.status}</div></div>`;
-            });
-            document.getElementById('ordersModal').style.display='flex';
-        }
+            if(!d) { list.innerHTML = "No orders found."; return; }
 
-        function setCat(c, b) {
-            document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
-            b.classList.add('active');
-            let list = appData.products;
-            if(c!=='all') list = list.filter(p=>p.cat===c);
-            document.getElementById('grid').innerHTML = list.map(p => `
-                <div class="card" onclick="openProd(${p.id})">
-                    <img src="${p.img}">
-                    <div class="info"><div>${p.name}</div><div style="font-weight:bold;">₹${p.price}</div></div>
-                </div>
-            `).join('');
+            const myOrders = Object.values(d).filter(o => o.user.phone === user.phone).reverse();
+            myOrders.forEach(o => {
+                const s = o.status;
+                list.innerHTML += `
+                <div class="track-item">
+                    <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>${new Date(o.date).toDateString()}</span><span>₹${o.total}</span></div>
+                    <div class="track-status">Status: ${s}</div>
+                </div>`;
+            });
+            document.getElementById('ordersModal').style.display = 'flex';
+        }
+        
+        function shareProduct() {
+            const url = window.location.origin + window.location.pathname + '?id=' + curProd.id;
+            if (navigator.share) {
+                navigator.share({ title: curProd.name, text: 'Check this out on Jija Studio!', url: url });
+            } else {
+                navigator.clipboard.writeText(url);
+                alert('Link copied to clipboard!');
+            }
         }
     </script>
 </body>
