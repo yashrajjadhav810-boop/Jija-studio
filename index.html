@@ -45,7 +45,7 @@
         .filter-options { display: flex; gap: 10px; padding: 10px 15px; overflow-x: auto; background: var(--light); }
         .filter-select { padding: 6px; border-radius: 6px; border: 1px solid #ddd; background: white; font-size: 0.8rem; outline: none; }
 
-        /* HERO & GRID (Fixed for Click Issue) */
+        /* HERO & GRID */
         .hero-slider { height: 200px; margin: 10px 15px; border-radius: 12px; overflow: hidden; position: relative; background: #ddd; display: none; }
         
         .slide { 
@@ -56,14 +56,12 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            /* Fix: Make invisible slides unclickable */
             pointer-events: none;
             z-index: 0;
         }
         
         .slide.active { 
             opacity: 1; 
-            /* Fix: Make visible slide clickable */
             pointer-events: auto;
             z-index: 10;
         }
@@ -315,7 +313,12 @@
         let appData = { products: [], catBanners: [], subCategories: {}, settings: {theme:'default'} };
         let cart = [], wishlist = JSON.parse(localStorage.getItem('jijaWish')) || [];
         let user = JSON.parse(localStorage.getItem('jijaUser'));
+        
+        // --- UPDATED GLOBALS ---
         let curProd=null, imgs=[], imgIdx=0;
+        let activeCat = 'all'; // Tracks main category
+        let activeSub = 'all'; // Tracks sub-category
+
         const SIZES = { cloth: ["S","M","L","XL","XXL"], kids: ["0-1Y","2-3Y","4-5Y"], footwear: [6,7,8,9,10], jewelry: ["Free Size"] };
 
         window.onload = async () => {
@@ -385,14 +388,11 @@
             applyFilters();
         }
 
-        /* --- UPDATED SLIDER FUNCTION --- */
         function initSlider() {
             const list = appData.products.filter(p => p.isBanner);
             
             if(list.length) {
                 document.getElementById('heroSlider').style.display = 'block';
-                
-                // Create slides with logic
                 document.getElementById('heroSlider').innerHTML = list.map((p,i) => `
                     <div class="slide ${i==0 ? 'active' : ''}">
                         <img src="${p.img}" onclick="openProd(${p.id})">
@@ -402,26 +402,73 @@
                 let idx = 0;
                 setInterval(() => {
                     const slides = document.querySelectorAll('.slide');
-                    
-                    // Hide current
                     slides[idx].classList.remove('active');
-                    
-                    // Increment
                     idx = (idx + 1) % slides.length;
-                    
-                    // Show next
                     slides[idx].classList.add('active');
                 }, 4000);
             }
         }
 
+        /* --- UPDATED LOGIC FOR SUB-CATEGORIES --- */
+        function setCat(c, b) {
+            document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+            if(b) b.classList.add('active');
+            
+            activeCat = c;
+            activeSub = 'all'; // Reset sub-category
+
+            // Show Sub-Category Chips if exist
+            const subRow = document.getElementById('subCatRow');
+            const subs = appData.subCategories[c];
+
+            if(subs && subs.length) {
+                subRow.style.display = 'flex';
+                subRow.innerHTML = `<div class="sub-chip active" onclick="setSub('all',this)">All</div>` + 
+                    subs.map(s => `<div class="sub-chip" onclick="setSub('${s}',this)">${s}</div>`).join('');
+            } else {
+                subRow.style.display = 'none';
+                subRow.innerHTML = '';
+            }
+            applyFilters();
+        }
+
+        function setSub(s, btn) {
+            document.querySelectorAll('.sub-chip').forEach(t=>t.classList.remove('active'));
+            btn.classList.add('active');
+            activeSub = s;
+            applyFilters();
+        }
+
+        /* --- UPDATED FILTER LOGIC (BUDGET + SORT + CAT) --- */
         function applyFilters() {
             let list = appData.products || [];
+            
+            // 1. Category Filter
+            if(activeCat !== 'all') list = list.filter(p => p.cat === activeCat);
+            
+            // 2. Sub-Category Filter
+            if(activeSub !== 'all') list = list.filter(p => p.sub === activeSub);
+
+            // 3. Search Filter
             const q = document.getElementById('searchBox').value.toLowerCase();
             if(q) list = list.filter(p => p.name.toLowerCase().includes(q));
-            // Add Category/Filter logic here...
-            
-            document.getElementById('grid').innerHTML = list.map(p => {
+
+            // 4. Budget Filter (FIXED)
+            const budget = document.getElementById('budgetFilter').value;
+            if(budget !== 'all') {
+                if(budget === '500') list = list.filter(p => parseInt(p.price) < 500);
+                else if(budget === '1000') list = list.filter(p => parseInt(p.price) >= 500 && parseInt(p.price) <= 1000);
+                else if(budget === 'high') list = list.filter(p => parseInt(p.price) > 1000);
+            }
+
+            // 5. Sorting
+            const sort = document.getElementById('sortSelect').value;
+            if(sort === 'low') list.sort((a,b) => parseInt(a.price) - parseInt(b.price));
+            else if(sort === 'high') list.sort((a,b) => parseInt(b.price) - parseInt(a.price));
+            else if(sort === 'new') list.sort((a,b) => b.id - a.id); // Assuming ID is incremental
+
+            // Render
+            document.getElementById('grid').innerHTML = list.length ? list.map(p => {
                 const w = wishlist.includes(p.id) ? 'active' : '';
                 return `<div class="card">
                     <div class="card-img-wrap">
@@ -431,7 +478,7 @@
                     </div>
                     <div class="info"><div class="title">${p.name}</div><div class="price">₹${p.price}</div><button class="btn-view" onclick="openProd(${p.id})">View</button></div>
                 </div>`;
-            }).join('');
+            }).join('') : '<div style="width:100%; text-align:center; padding:20px;">No products found</div>';
         }
 
         // --- SHARE PRODUCT ---
@@ -461,11 +508,9 @@
             sel.innerHTML = '<option value="">Select Size</option>';
             if(curProd.stock) for(let [s,q] of Object.entries(curProd.stock)) if(q>0) sel.innerHTML+=`<option value="${s}">Size ${s}</option>`;
 
-            // Compact Similar Items
             const sims = appData.products.filter(p=>p.cat===curProd.cat && p.id!=curProd.id).slice(0,5);
             document.getElementById('similarRow').innerHTML = sims.map(p=>`<div class="sim-card" onclick="openProd(${p.id})"><img src="${p.img}"></div>`).join('');
 
-            // Reviews
             const revs = (appData.reviews||[]).filter(r=>r.pid==curProd.id);
             document.getElementById('reviewList').innerHTML = revs.length ? revs.map(r=>`<div style="font-size:0.8rem; margin-bottom:5px;"><b>${r.user}:</b> ${r.text}</div>`).join('') : "<small>No reviews</small>";
 
@@ -526,9 +571,8 @@
                 </div>
             `).join('');
             
-            // --- BILLING LOGIC ---
             let subtotal = cart.reduce((a,b)=>a+parseInt(b.price),0);
-            let delivery = cart.length * 40; // ₹40 per item
+            let delivery = cart.length * 40; 
             
             document.getElementById('cartSub').innerText = '₹'+subtotal;
             document.getElementById('cartDel').innerText = '₹'+delivery;
@@ -576,19 +620,6 @@
                 list.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:5px; border-radius:5px;"><div style="display:flex; justify-content:space-between;"><b>${new Date(o.date).toLocaleDateString()}</b><b>₹${o.total}</b></div><div style="color:var(--primary)">${o.status}</div></div>`;
             });
             document.getElementById('ordersModal').style.display='flex';
-        }
-
-        function setCat(c, b) {
-            document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
-            b.classList.add('active');
-            let list = appData.products;
-            if(c!=='all') list = list.filter(p=>p.cat===c);
-            document.getElementById('grid').innerHTML = list.map(p => `
-                <div class="card" onclick="openProd(${p.id})">
-                    <img src="${p.img}">
-                    <div class="info"><div>${p.name}</div><div style="font-weight:bold;">₹${p.price}</div></div>
-                </div>
-            `).join('');
         }
     </script>
 </body>
