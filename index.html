@@ -45,10 +45,29 @@
         .filter-options { display: flex; gap: 10px; padding: 10px 15px; overflow-x: auto; background: var(--light); }
         .filter-select { padding: 6px; border-radius: 6px; border: 1px solid #ddd; background: white; font-size: 0.8rem; outline: none; }
 
-        /* HERO & GRID (Mobile Friendly 2-Column) */
+        /* HERO & GRID (Fixed for Click Issue) */
         .hero-slider { height: 200px; margin: 10px 15px; border-radius: 12px; overflow: hidden; position: relative; background: #ddd; display: none; }
-        .slide { position: absolute; inset: 0; opacity: 0; transition: 0.5s; display: flex; align-items: center; justify-content: center; }
-        .slide.active { opacity: 1; }
+        
+        .slide { 
+            position: absolute; 
+            inset: 0; 
+            opacity: 0; 
+            transition: 0.5s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            /* Fix: Make invisible slides unclickable */
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .slide.active { 
+            opacity: 1; 
+            /* Fix: Make visible slide clickable */
+            pointer-events: auto;
+            z-index: 10;
+        }
+        
         .slide img { width: 100%; height: 100%; object-fit: cover; }
 
         .cat-grid { display: flex; gap: 10px; padding: 5px 15px 15px; overflow-x: auto; scrollbar-width: none; }
@@ -366,12 +385,33 @@
             applyFilters();
         }
 
+        /* --- UPDATED SLIDER FUNCTION --- */
         function initSlider() {
-            const list = appData.products.filter(p=>p.isBanner);
+            const list = appData.products.filter(p => p.isBanner);
+            
             if(list.length) {
-                document.getElementById('heroSlider').style.display='block';
-                document.getElementById('heroSlider').innerHTML = list.map((p,i)=>`<div class="slide ${i==0?'active':''}" style="opacity:${i==0?1:0}"><img src="${p.img}" onclick="openProd(${p.id})"></div>`).join('');
-                let idx=0; setInterval(()=>{ const s=document.querySelectorAll('.slide'); s[idx].style.opacity=0; idx=(idx+1)%s.length; s[idx].style.opacity=1; },4000);
+                document.getElementById('heroSlider').style.display = 'block';
+                
+                // Create slides with logic
+                document.getElementById('heroSlider').innerHTML = list.map((p,i) => `
+                    <div class="slide ${i==0 ? 'active' : ''}">
+                        <img src="${p.img}" onclick="openProd(${p.id})">
+                    </div>
+                `).join('');
+
+                let idx = 0;
+                setInterval(() => {
+                    const slides = document.querySelectorAll('.slide');
+                    
+                    // Hide current
+                    slides[idx].classList.remove('active');
+                    
+                    // Increment
+                    idx = (idx + 1) % slides.length;
+                    
+                    // Show next
+                    slides[idx].classList.add('active');
+                }, 4000);
             }
         }
 
