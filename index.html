@@ -2,26 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>Jija Studio | Professional Creative Agency</title>
-    <meta name="description" content="Welcome to Jija Studio. We provide professional creative services, web design, and portfolio showcases. Visit our official website here.">
-    <meta name="keywords" content="Jija Studio, Jija Studio Website, JijaStudio, Creative Agency, Portfolio">
+    <title>Jija Studio | Official Store</title>
+    <meta name="description" content="Welcome to Jija Studio. Shop the latest fashion, kids wear, jewelry, and more.">
+    <meta name="keywords" content="Jija Studio, Fashion, Saree, Kids Wear, Online Shopping">
     <meta name="author" content="Jija Studio">
 
-    <meta property="og:title" content="Jija Studio - Official Website">
-    <meta property="og:description" content="Check out the official portfolio and creative works of Jija Studio.">
+    <meta property="og:title" content="Jija Studio - Official Store">
+    <meta property="og:description" content="Explore our latest collection of Fashion, Kids wear & Accessories.">
     <meta property="og:url" content="https://jijastudio.github.io/Jija-studio/">
     <meta property="og:type" content="website">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jija Studio</title>
+    <meta property="og:image" content="logo.jpg"> 
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="icon" type="image/jpg" href="logo.jpg">
+
     <style>
         :root { --primary: #D81B60; --dark: #1e293b; --light: #f8fafc; --white: #ffffff; }
         * { -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); padding-bottom: 80px; overflow-x: hidden; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--light); padding-bottom: 80px; overflow-x: hidden; color: #333; }
         
         /* HEADER */
         header { background: var(--primary); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -30,7 +31,7 @@
         .icon-btn { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; position: relative; margin-left: 12px; }
         .badge { position: absolute; top: -5px; right: -5px; background: white; color: var(--primary); font-size: 0.65rem; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* SEARCH & FILTER */
+        /* SEARCH & TABS */
         .search-wrap { padding: 10px 15px; background: white; position: sticky; top: 56px; z-index: 90; }
         .search-input { width: 100%; padding: 10px 20px; border: 1px solid #ddd; border-radius: 50px; background: #f1f5f9; outline: none; box-sizing: border-box; font-size: 0.9rem; }
 
@@ -45,27 +46,10 @@
         .filter-options { display: flex; gap: 10px; padding: 10px 15px; overflow-x: auto; background: var(--light); }
         .filter-select { padding: 6px; border-radius: 6px; border: 1px solid #ddd; background: white; font-size: 0.8rem; outline: none; }
 
-        /* HERO & GRID */
+        /* HERO & BANNERS */
         .hero-slider { height: 200px; margin: 10px 15px; border-radius: 12px; overflow: hidden; position: relative; background: #ddd; display: none; }
-        
-        .slide { 
-            position: absolute; 
-            inset: 0; 
-            opacity: 0; 
-            transition: 0.5s; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        .slide.active { 
-            opacity: 1; 
-            pointer-events: auto;
-            z-index: 10;
-        }
-        
+        .slide { position: absolute; inset: 0; opacity: 0; transition: 0.5s; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 0; }
+        .slide.active { opacity: 1; pointer-events: auto; z-index: 10; }
         .slide img { width: 100%; height: 100%; object-fit: cover; }
 
         .cat-grid { display: flex; gap: 10px; padding: 5px 15px 15px; overflow-x: auto; scrollbar-width: none; }
@@ -73,9 +57,11 @@
         .cat-media { width: 100%; height: 100%; object-fit: cover; }
         .cat-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.75rem; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
+        /* PRODUCT GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 10px; padding: 10px 15px; } 
         .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; position: relative; }
-        .card img { width: 100%; height: 180px; object-fit: cover; }
+        .card-img-wrap { position: relative; height: 180px; overflow: hidden; }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
         .wish-icon { position: absolute; top: 8px; right: 8px; background: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; z-index: 5; }
         .wish-icon.active { color: var(--primary); }
         .badge-img { position: absolute; top: 8px; left: 8px; width: 30px; z-index: 5; }
@@ -85,7 +71,6 @@
         .price { font-weight: 700; font-size: 1rem; color: #333; display:flex; align-items:center; flex-wrap:wrap; }
         .btn-view { width: 100%; padding: 6px; background: var(--primary); color: white; border: none; border-radius: 4px; margin-top: 5px; cursor: pointer; font-size: 0.85rem; }
 
-        /* MRP & DISCOUNT */
         .mrp { text-decoration: line-through; color: #888; font-size: 0.8rem; margin-left: 5px; font-weight: 400; }
         .off { color: #2e7d32; font-size: 0.75rem; font-weight: 700; margin-left: 5px; }
 
@@ -93,15 +78,9 @@
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; }
         .modal-box { background: white; width: 92%; max-width: 500px; max-height: 92vh; border-radius: 15px; overflow-y: auto; padding: 20px; position: relative; }
         .btn-full { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; font-weight: 600; border-radius: 8px; margin-top: 15px; font-size: 1rem; }
-
-        /* LOGIN */
         .login-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; }
 
-        /* ANIMATION */
-        .theme-particle { position: fixed; top: -10%; z-index: 9999; animation: fall linear forwards; font-size: 20px; pointer-events: none; }
-        @keyframes fall { 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
-        
-        /* GALLERY */
+        /* PRODUCT VIEW */
         .gallery-box { position: relative; height: 260px; background: #f9f9f9; border-radius: 8px; margin-bottom: 10px; }
         .gal-img { width: 100%; height: 100%; object-fit: contain; }
         .arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.3); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
@@ -109,20 +88,17 @@
         .thumbs { display: flex; gap: 5px; justify-content: center; margin-bottom: 10px; }
         .t-img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; border: 2px solid transparent; }
         .t-img.active { border-color: var(--primary); }
+        .share-btn { position: absolute; top: 10px; right: 50px; background: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; color: #333; z-index: 20; font-size: 1.2rem; }
 
-        /* --- COMPACT SIMILAR ITEMS (SMALL SIZE) --- */
+        /* ANIMATION & EXTRAS */
+        .theme-particle { position: fixed; top: -10%; z-index: 9999; animation: fall linear forwards; font-size: 20px; pointer-events: none; }
+        @keyframes fall { 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
         .similar-row { display: flex; gap: 8px; overflow-x: auto; margin-top: 5px; padding-bottom: 5px; scrollbar-width: none; }
         .sim-card { min-width: 70px; width: 70px; cursor: pointer; flex-shrink: 0; }
         .sim-card img { width: 100%; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid #eee; }
-
-        /* SHARE BUTTON */
-        .share-btn { position: absolute; top: 10px; right: 50px; background: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; color: #333; z-index: 20; font-size: 1.2rem; }
-
-        /* CART BILL */
         .bill-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
         .bill-total { border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 10px; font-weight: bold; font-size: 1.1rem; text-align: right; }
 
-        /* FOOTER */
         footer { background: #fff; padding: 20px; text-align: center; margin-top: 30px; font-size: 0.85rem; color: #666; border-top: 1px solid #eee; }
         .footer-link { color: var(--primary); font-weight: 600; text-decoration: none; margin: 0 5px; cursor: pointer; }
     </style>
@@ -183,9 +159,6 @@
             <option value="low">Price: Low to High</option>
             <option value="high">Price: High to Low</option>
         </select>
-        <select id="sizeFilter" class="filter-select" style="display:none;" onchange="applyFilters()">
-            <option value="all">📏 Size</option>
-        </select>
     </div>
 
     <div id="heroSlider" class="hero-slider"></div>
@@ -195,16 +168,13 @@
     <div id="productView" class="modal">
         <div class="modal-box" style="padding:15px;">
             <span onclick="document.getElementById('productView').style.display='none'" style="position:absolute; right:15px; top:10px; font-size:1.8rem; cursor:pointer; z-index:30;">&times;</span>
-            
             <div class="share-btn" onclick="shareProduct()"><i class="ri-share-forward-line"></i></div>
-
             <div class="gallery-box">
                 <div class="arrow left" onclick="moveImg(-1)">&#10094;</div>
                 <img id="pvImg" class="gal-img">
                 <div class="arrow right" onclick="moveImg(1)">&#10095;</div>
             </div>
             <div class="thumbs" id="pvThumbs"></div>
-
             <div style="padding:0 5px;">
                 <h3 id="pvTitle" style="margin:0 0 5px; font-size:1.1rem; line-height:1.3;"></h3>
                 <div id="pvPrice" style="color:var(--primary); font-weight:bold; font-size:1.2rem; display:flex; align-items:center;"></div>
@@ -212,10 +182,8 @@
                 <div id="pvStock" style="font-size:0.8rem; margin-top:5px; font-weight:bold; color:green;"></div>
                 <p id="pvDesc" style="color:#555; font-size:0.85rem; line-height:1.4; margin:8px 0;"></p>
             </div>
-
             <div style="font-weight:600; font-size:0.85rem; margin-top:10px; color:#666;">Similar Items</div>
             <div id="similarRow" class="similar-row"></div>
-
             <div style="border-top:1px solid #eee; margin-top:10px; padding-top:10px;">
                 <div style="font-weight:600; font-size:0.85rem; margin-bottom:5px;">Reviews</div>
                 <div id="reviewList" style="max-height:80px; overflow-y:auto; margin-bottom:5px; font-size:0.8rem;"></div>
@@ -224,7 +192,6 @@
                     <button onclick="addReview()" style="background:#333; color:white; border:none; padding:0 12px; border-radius:4px; font-size:0.85rem;">Post</button>
                 </div>
             </div>
-
             <button class="btn-full" onclick="addToCart()">ADD TO CART</button>
         </div>
     </div>
@@ -233,13 +200,11 @@
         <div class="modal-box">
             <h3>Cart</h3>
             <div id="cartList"></div>
-            
             <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-top:15px; border:1px dashed #ccc;">
                 <div class="bill-row"><span>Subtotal</span><span id="cartSub">₹0</span></div>
                 <div class="bill-row"><span>Delivery Charge (₹40/item)</span><span id="cartDel">₹0</span></div>
                 <div class="bill-total">Total: ₹<span id="cartTotal">0</span></div>
             </div>
-
             <button class="btn-full" onclick="openCheckout()">Checkout</button>
             <button onclick="document.getElementById('cartModal').style.display='none'" style="width:100%; padding:10px; background:none; border:none; margin-top:5px;">Close</button>
         </div>
@@ -268,19 +233,13 @@
         <div class="modal-box">
             <span onclick="document.getElementById('aboutModal').style.display='none'" style="float:right; font-size:1.5rem; cursor:pointer;">&times;</span>
             <h2 style="color:var(--primary); text-align:center; margin-bottom:10px;">About Jija Studio</h2>
-            
             <div style="text-align:left; color:#555; line-height:1.6; font-size:0.9rem;">
                 <p><strong><i class="ri-map-pin-line"></i> Address:</strong><br>
                 M.G College Road, Umbraj<br>Yashlakshmi Complex, Second Floor</p>
                 <hr style="border:0; border-top:1px solid #eee; margin:10px 0;">
-                
-                <p><strong><i class="ri-time-line"></i> Store Timings:</strong><br>
-                9:30 AM - 8:30 PM</p>
+                <p><strong><i class="ri-time-line"></i> Store Timings:</strong><br>9:30 AM - 8:30 PM</p>
                 <hr style="border:0; border-top:1px solid #eee; margin:10px 0;">
-                
-                <p style="color:#d32f2f; font-weight:600; background:#ffebee; padding:10px; border-radius:5px; text-align:center;">
-                    🚫 No Return Policy Available
-                </p>
+                <p style="color:#d32f2f; font-weight:600; background:#ffebee; padding:10px; border-radius:5px; text-align:center;">🚫 No Return Policy Available</p>
             </div>
         </div>
     </div>
@@ -321,8 +280,6 @@
         let curProd=null, imgs=[], imgIdx=0;
         let activeCat = 'all'; 
         let activeSub = 'all'; 
-
-        const SIZES = { cloth: ["S","M","L","XL","XXL"], kids: ["0-1Y","2-3Y","4-5Y"], footwear: [6,7,8,9,10], jewelry: ["Free Size"] };
 
         window.onload = async () => {
             if(user) document.getElementById('loginModal').style.display='none';
@@ -368,7 +325,6 @@
             else if(t==='valentine') { r.setProperty('--primary', '#e11d48'); s=['❤️','💖']; }
             else if(t==='newyear') { r.setProperty('--primary', '#0f172a'); s=['🎉','🥂']; }
             else r.setProperty('--primary', '#D81B60');
-            
             if(s.length) startRain(s);
         }
 
@@ -385,15 +341,27 @@
         }
 
         function renderHome() {
+            // When a banner is clicked, we filter by that sub-category
             document.getElementById('catBanners').innerHTML = appData.catBanners.map(b => {
-                return `<div class="cat-card" onclick="alert('Filter: ${b.sub}')"><img src="${b.media}" class="cat-media"><div class="cat-overlay">${b.sub}</div></div>`;
+                return `<div class="cat-card" onclick="bannerFilter('${b.sub}')"><img src="${b.media}" class="cat-media"><div class="cat-overlay">${b.sub}</div></div>`;
             }).join('');
             applyFilters();
         }
 
+        function bannerFilter(sub) {
+            activeCat = 'all'; // Reset main cat to search all
+            activeSub = sub;   // Set sub-category
+            // Visual Update: Highlight 'All' tab and reset sub chips
+            document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('subCatRow').style.display = 'none'; // Hide specific sub-row as we are in 'All' mode technically
+            applyFilters();
+            // Scroll to grid to show results
+            document.getElementById('grid').scrollIntoView({behavior: 'smooth'});
+        }
+
         function initSlider() {
             const list = appData.products.filter(p => p.isBanner);
-            
             if(list.length) {
                 document.getElementById('heroSlider').style.display = 'block';
                 document.getElementById('heroSlider').innerHTML = list.map((p,i) => `
@@ -401,7 +369,6 @@
                         <img src="${p.img}" onclick="openProd(${p.id})">
                     </div>
                 `).join('');
-
                 let idx = 0;
                 setInterval(() => {
                     const slides = document.querySelectorAll('.slide');
@@ -415,7 +382,6 @@
         function setCat(c, b) {
             document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
             if(b) b.classList.add('active');
-            
             activeCat = c;
             activeSub = 'all'; 
 
@@ -435,7 +401,7 @@
 
         function setSub(s, btn) {
             document.querySelectorAll('.sub-chip').forEach(t=>t.classList.remove('active'));
-            btn.classList.add('active');
+            if(btn) btn.classList.add('active');
             activeSub = s;
             applyFilters();
         }
@@ -444,11 +410,7 @@
             let list = appData.products || [];
             
             if(activeCat !== 'all') list = list.filter(p => p.cat === activeCat);
-            
-            // --- FIXED SUB-CATEGORY LOGIC ---
-            if(activeSub !== 'all') {
-                list = list.filter(p => p.subCats && p.subCats.includes(activeSub));
-            }
+            if(activeSub !== 'all') list = list.filter(p => p.subCats && p.subCats.includes(activeSub));
 
             const q = document.getElementById('searchBox').value.toLowerCase();
             if(q) list = list.filter(p => p.name.toLowerCase().includes(q));
@@ -465,7 +427,6 @@
             else if(sort === 'high') list.sort((a,b) => parseInt(b.price) - parseInt(a.price));
             else if(sort === 'new') list.sort((a,b) => b.id - a.id);
 
-            // --- GRID RENDER WITH MRP & DISCOUNT ---
             document.getElementById('grid').innerHTML = list.length ? list.map(p => {
                 const w = wishlist.includes(p.id) ? 'active' : '';
                 return `<div class="card">
@@ -489,12 +450,8 @@
 
         function shareProduct() {
             const url = window.location.origin + window.location.pathname + '?id=' + curProd.id;
-            if (navigator.share) {
-                navigator.share({ title: curProd.name, text: 'Check this out on Jija Studio!', url: url });
-            } else {
-                navigator.clipboard.writeText(url);
-                alert('Link copied to clipboard!');
-            }
+            if (navigator.share) navigator.share({ title: curProd.name, text: 'Check this out on Jija Studio!', url: url });
+            else { navigator.clipboard.writeText(url); alert('Link copied to clipboard!'); }
         }
 
         function openProd(id) {
@@ -506,14 +463,7 @@
             imgIdx=0; updateGal();
 
             document.getElementById('pvTitle').innerText=curProd.name;
-            
-            // --- MODAL PRICE DISPLAY ---
-            document.getElementById('pvPrice').innerHTML = `
-                ₹${curProd.price}
-                ${curProd.mrp ? `<span style="text-decoration:line-through; color:#888; font-size:0.9rem; margin-left:10px;">₹${curProd.mrp}</span>` : ''}
-                ${curProd.discount ? `<span style="color:green; font-size:0.9rem; margin-left:10px; font-weight:bold;">${curProd.discount}</span>` : ''}
-            `;
-            
+            document.getElementById('pvPrice').innerHTML = `₹${curProd.price} ${curProd.mrp ? `<span style="text-decoration:line-through; color:#888; font-size:0.9rem; margin-left:10px;">₹${curProd.mrp}</span>` : ''} ${curProd.discount ? `<span style="color:green; font-size:0.9rem; margin-left:10px; font-weight:bold;">${curProd.discount}</span>` : ''}`;
             document.getElementById('pvDesc').innerText=curProd.desc||"";
             
             const sel = document.getElementById('pvSize');
@@ -525,7 +475,6 @@
 
             const revs = (appData.reviews||[]).filter(r=>r.pid==curProd.id);
             document.getElementById('reviewList').innerHTML = revs.length ? revs.map(r=>`<div style="font-size:0.8rem; margin-bottom:5px;"><b>${r.user}:</b> ${r.text}</div>`).join('') : "<small>No reviews</small>";
-
             document.getElementById('productView').style.display='flex';
         }
 
@@ -582,14 +531,11 @@
                     <div>₹${i.price} <i class="ri-close-circle-fill" style="color:red; cursor:pointer;" onclick="removeItem(${idx})"></i></div>
                 </div>
             `).join('');
-            
             let subtotal = cart.reduce((a,b)=>a+parseInt(b.price),0);
             let delivery = cart.length * 40; 
-            
             document.getElementById('cartSub').innerText = '₹'+subtotal;
             document.getElementById('cartDel').innerText = '₹'+delivery;
             document.getElementById('cartTotal').innerText = subtotal + delivery;
-            
             document.getElementById('cartModal').style.display='flex';
         }
         
@@ -609,14 +555,11 @@
             const addr = document.getElementById('addrLocal').value;
             if(!addr) return alert("Enter Address");
             const fullAddr = `${addr}, ${document.getElementById('addrCity').value}, ${document.getElementById('addrDist').value}`;
-            
             const totalAmount = document.getElementById('cartTotal').innerText;
             const order = { date: new Date().toISOString(), user: user, address: {city:fullAddr}, cart:cart, total:totalAmount, status: "Ordered" };
             await fetch(ORDERS_URL, { method: "POST", body: JSON.stringify(order) });
-            
             let msg = `*NEW ORDER*\nUser: ${user.name}\nAddr: ${fullAddr}\nItems:\n` + cart.map(i=>`- ${i.name} (${i.size})`).join('\n') + `\nTotal with Delivery: ₹${totalAmount}`;
             window.open(`https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(msg)}`);
-            
             cart=[]; document.getElementById('cCount').innerText=0;
             document.getElementById('checkoutModal').style.display='none';
             alert("Order Placed!");
