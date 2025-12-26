@@ -196,7 +196,9 @@
                         <option value="jewelry">Jewelry</option>
                         <option value="toy">Toy</option>
                     </select>
-                    <input id="pPrice" type="number" placeholder="Price">
+                    <input id="pPrice" type="number" placeholder="Selling Price (₹)">
+                    <input id="pMrp" type="number" placeholder="MRP (₹) (Optional)">
+                    <input id="pDiscount" placeholder="Discount (e.g. 20% OFF)">
                 </div>
 
                 <div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:10px;">
@@ -412,6 +414,8 @@
             id: editId || Date.now(),
             name, cat: document.getElementById('pCat').value, subCats: currentTags,
             price: document.getElementById('pPrice').value,
+            mrp: document.getElementById('pMrp').value, // SAVING MRP
+            discount: document.getElementById('pDiscount').value, // SAVING DISCOUNT
             img: document.getElementById('pImg').value,
             img2: document.getElementById('pImg2').value,
             img3: document.getElementById('pImg3').value,
@@ -444,6 +448,11 @@
         document.getElementById('pName').value = p.name;
         document.getElementById('pCat').value = p.cat;
         document.getElementById('pPrice').value = p.price;
+        
+        // LOAD MRP AND DISCOUNT
+        document.getElementById('pMrp').value = p.mrp || "";
+        document.getElementById('pDiscount').value = p.discount || "";
+
         document.getElementById('pImg').value = p.img;
         document.getElementById('pImg2').value = p.img2||"";
         document.getElementById('pImg3').value = p.img3||"";
